@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-package org.unizar.tfg_backend.infraestructure
+package org.unizar.tfg_backend.infraestructure.repositories
 
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano

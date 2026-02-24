@@ -7,7 +7,7 @@ import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import java.time.LocalDate
 
 interface LogFormularioHumanoUseCase {
-    fun log(e: Short, s: Char, mC: Short, mR: Short, mD: Short,
+    fun log(e: Short, s: Char, mC: Short?, mR: Short?, mD: Short?,
             fIS: LocalDate, d: Boolean, h: Boolean): FormularioHumano
 }
 
@@ -17,9 +17,9 @@ class LogFormularioHumanoUseCaseImpl (
     override fun log(
         e: Short,
         s: Char,
-        mC: Short,
-        mR: Short,
-        mD: Short,
+        mC: Short?,
+        mR: Short?,
+        mD: Short?,
         fIS: LocalDate,
         d: Boolean,
         h: Boolean
