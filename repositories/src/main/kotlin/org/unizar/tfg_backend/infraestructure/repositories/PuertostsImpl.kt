@@ -29,4 +29,10 @@ class ServicioRepositorioFormularioHumanoImpl(
 
     override fun save(form: FormularioHumano): FormularioHumano =
         repositorioFormularioHumano.save(form.toEntity()).toDomain()
+
+    override fun findAll(): List<FormularioHumano> {
+        val list = repositorioFormularioHumano.findAll()
+
+        return list.map { it.toDomain() }
+    }
 }

@@ -12,7 +12,7 @@ interface LogFormularioHumanoUseCase {
 }
 
 class LogFormularioHumanoUseCaseImpl (
-    private val repositorioFormularioHumano: ServicioRepositorioFormularioHumano,
+    private val repositorioFormularioHumano: ServicioRepositorioFormularioHumano
 ) : LogFormularioHumanoUseCase {
     override fun log(
         e: Short,
