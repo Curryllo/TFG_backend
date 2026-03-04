@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 interface LogFormularioHumanoUseCase {
     fun log(e: Short, s: Char, mC: Short?, mR: Short?, mD: Short?,
-            fIS: LocalDate, d: Boolean, h: Boolean): FormularioHumano
+            fIS: LocalDate?, d: Boolean, h: Boolean): FormularioHumano
 }
 
 class LogFormularioHumanoUseCaseImpl (
@@ -20,7 +20,7 @@ class LogFormularioHumanoUseCaseImpl (
         mC: Short?,
         mR: Short?,
         mD: Short?,
-        fIS: LocalDate,
+        fIS: LocalDate?,
         d: Boolean,
         h: Boolean
     ): FormularioHumano {
@@ -31,6 +31,7 @@ class LogFormularioHumanoUseCaseImpl (
             municipioResidencia = mR,
             municipioDeclarante = mD,
             fechaInicioSintomas = fIS,
+            fechaActual = LocalDate.now(),
             defuncion = d,
             hospitalizado = h
         )

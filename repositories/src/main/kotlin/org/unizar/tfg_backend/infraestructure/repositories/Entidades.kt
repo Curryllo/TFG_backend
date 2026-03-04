@@ -26,7 +26,9 @@ class EntidadFormularioHumano(
     @Column(name = "municipiodeclarante")
     val municipioDeclarante: Short?,
     @Column(name = "fechainiciosintomas")
-    val fechaInicioSintomas: LocalDate,
+    val fechaInicioSintomas: LocalDate?,
+    @Column(name = "fechacaso")
+    val fechaActual: LocalDate,
     @Column(name = "defuncion")
     val defuncion: Boolean,
     @Column(name = "casohospitalizado")

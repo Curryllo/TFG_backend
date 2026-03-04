@@ -11,7 +11,16 @@ data class FormularioHumano(
     val municipioCaso: Short?,
     val municipioResidencia: Short?,
     val municipioDeclarante: Short?,
-    val fechaInicioSintomas: LocalDate,
+    val fechaInicioSintomas: LocalDate?,
+    val fechaActual: LocalDate,
     val defuncion: Boolean,
     val hospitalizado: Boolean
+)
+
+data class FormularioMonitoreo(
+    val sitioRecogida: String?,
+    val hospedador: String?,
+    val especieVegetacion: String?,
+    val generoVector: String,
+    val sexo: Char
 )

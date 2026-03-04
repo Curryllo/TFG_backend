@@ -12,6 +12,7 @@ fun FormularioHumano.toEntity() = EntidadFormularioHumano(
     municipioResidencia = municipioResidencia,
     municipioDeclarante = municipioDeclarante,
     fechaInicioSintomas = fechaInicioSintomas,
+    fechaActual = fechaActual,
     defuncion = defuncion,
     hospitalizado = hospitalizado
 )
@@ -23,6 +24,7 @@ fun EntidadFormularioHumano.toDomain() = FormularioHumano(
     municipioResidencia = municipioResidencia,
     municipioDeclarante = municipioDeclarante,
     fechaInicioSintomas = fechaInicioSintomas,
+    fechaActual = fechaActual,
     defuncion = defuncion,
     hospitalizado = hospitalizado
 )
