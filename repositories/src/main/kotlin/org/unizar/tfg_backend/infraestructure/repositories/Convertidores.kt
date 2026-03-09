@@ -3,6 +3,7 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import org.unizar.tfg_backend.core.FormularioHumano
+import org.unizar.tfg_backend.core.FormularioMonitoreo
 
 fun FormularioHumano.toEntity() = EntidadFormularioHumano(
     idForm = null,
@@ -28,3 +29,4 @@ fun EntidadFormularioHumano.toDomain() = FormularioHumano(
     defuncion = defuncion,
     hospitalizado = hospitalizado
 )
+

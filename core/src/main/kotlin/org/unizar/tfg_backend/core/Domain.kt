@@ -18,9 +18,12 @@ data class FormularioHumano(
 )
 
 data class FormularioMonitoreo(
-    val sitioRecogida: String?,
-    val hospedador: String?,
-    val especieVegetacion: String?,
-    val generoVector: String,
-    val sexo: Char
+    val lugarRecogida: String?,
+    val vector: String,
+    val enfermedad: String,
+    val fecha: LocalDate,
+    val numero: Int,
+    val genero: Char?,
+    val latitud: Double,
+    val longitud: Double
 )
