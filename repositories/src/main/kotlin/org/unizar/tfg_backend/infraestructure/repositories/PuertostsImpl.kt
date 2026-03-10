@@ -3,7 +3,9 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import org.unizar.tfg_backend.core.FormularioHumano
+import org.unizar.tfg_backend.core.FormularioMonitoreo
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
+import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
 
 class ServicioRepositorioFormularioHumanoImpl(
     private val repositorioFormularioHumano: RepositorioFormularioHumano
@@ -32,6 +34,19 @@ class ServicioRepositorioFormularioHumanoImpl(
 
     override fun findAll(): List<FormularioHumano> {
         val list = repositorioFormularioHumano.findAll()
+
+        return list.map { it.toDomain() }
+    }
+}
+
+class ServicioRepositorioFormularioMonitoreoImpl(
+    private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo
+) : ServicioRepositorioFormularioMonitoreo {
+    override fun save(form: FormularioMonitoreo): FormularioMonitoreo =
+        repositorioFormularioMonitoreo.save(form.toEntity()).toDomain()
+
+    override fun findAll(): List<FormularioMonitoreo> {
+        val list = repositorioFormularioMonitoreo.findAll()
 
         return list.map { it.toDomain() }
     }

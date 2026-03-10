@@ -34,3 +34,32 @@ class EntidadFormularioHumano(
     @Column(name = "casohospitalizado")
     val hospitalizado: Boolean
 )
+
+
+@Entity
+@Table(name = "form_mon")
+@Suppress("LongParameterList")
+class EntidadFormularioMonitoreo(
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "form_mon_gen")
+    @SequenceGenerator(name = "form_mon_gen", sequenceName = "form_mon_seq", allocationSize = 1)
+    @Column(name = "idform")
+    val idForm: Int?,
+    @Column(name = "lugar")
+    val lugar: String?,
+    @Column(name = "vector")
+    val vector: String,
+    @Column(name = "enfermedad")
+    val enfermedad: String,
+    @Column(name = "fecha")
+    val fecha: LocalDate,
+    @Column(name = "numero")
+    val numero: Int,
+    @Column(name = "genero")
+    val genero: Char?,
+    @Column(name = "longitud")
+    val longitud: Double?,
+    @Column(name = "latitud")
+    val latitud: Double?
+)
+

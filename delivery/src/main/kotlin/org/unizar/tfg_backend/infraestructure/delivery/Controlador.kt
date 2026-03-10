@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCase
+import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
@@ -16,6 +17,7 @@ import java.time.LocalDate
 interface Controlador {
     fun guardarFormularioHumano(datos: FormularioHumanosIn, request: HttpServletRequest) : ResponseEntity<Any>
     fun obtenerDatosHumanos(request: HttpServletRequest) : ResponseEntity<Any>
+    fun guardarFormularioMonitoreo(datos: FormularioMonitoreoIn, request: HttpServletRequest) : ResponseEntity<Any>
 }
 
 
@@ -30,16 +32,28 @@ data class FormularioHumanosIn (
     val casoHospitalizado: Boolean = false
 )
 
+data class FormularioMonitoreoIn(
+    val lugarRecogida: String? = null,
+    val vector: String = "",
+    val enfermedad: String = "",
+    val fecha: LocalDate = LocalDate.now(),
+    val numero: Int = 1,
+    val genero: Char? = 'M',
+    val latitud: Double? = null,
+    val longitud: Double? = null
+)
+
 @RestController
 class ControladorImpl(
     val logFormularioHumanoUseCase: LogFormularioHumanoUseCase,
-    val obtenerFormulariosHumanosUseCase: ObtenerFormulariosHumanosUseCase
+    val obtenerFormulariosHumanosUseCase: ObtenerFormulariosHumanosUseCase,
+    val logFormularioMonitoreoUseCase: LogFormularioMonitoreoUseCase
 ) : Controlador {
     @PostMapping(value = ["/api/formHumanos"])
     override fun guardarFormularioHumano(
         @RequestBody datos: FormularioHumanosIn, request: HttpServletRequest): ResponseEntity<Any> {
-        println("Ha entrado")
-        println("Edad: " + datos.edad)
+        //println("Ha entrado")
+        //println("Edad: " + datos.edad)
         val resultado = logFormularioHumanoUseCase.log(
             e = datos.edad,
             s = datos.sexo,
@@ -63,5 +77,24 @@ class ControladorImpl(
         } else {
             ResponseEntity.ok(lista)
         }
+    }
+
+
+    @PostMapping(value = ["/api/formMonitoreo"])
+    override fun guardarFormularioMonitoreo(
+        @RequestBody datos: FormularioMonitoreoIn, request: HttpServletRequest): ResponseEntity<Any> {
+        println("Ha entrado")
+        val resultado = logFormularioMonitoreoUseCase.log(
+            l = datos.lugarRecogida,
+            v = datos.vector,
+            e = datos.enfermedad,
+            f = datos.fecha,
+            n = datos.numero,
+            g = datos.genero,
+            lat = datos.latitud,
+            long = datos.longitud
+        )
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }
 }

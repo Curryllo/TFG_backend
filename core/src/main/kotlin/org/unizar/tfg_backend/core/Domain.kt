@@ -24,6 +24,6 @@ data class FormularioMonitoreo(
     val fecha: LocalDate,
     val numero: Int,
     val genero: Char?,
-    val latitud: Double,
-    val longitud: Double
+    val latitud: Double?,
+    val longitud: Double?
 )

@@ -30,3 +30,26 @@ fun EntidadFormularioHumano.toDomain() = FormularioHumano(
     hospitalizado = hospitalizado
 )
 
+fun FormularioMonitoreo.toEntity() = EntidadFormularioMonitoreo(
+    idForm = null,
+    lugar = lugarRecogida,
+    vector = vector,
+    enfermedad = enfermedad,
+    fecha = fecha,
+    numero = numero,
+    genero = genero,
+    longitud = longitud,
+    latitud = latitud,
+)
+
+
+fun EntidadFormularioMonitoreo.toDomain() = FormularioMonitoreo(
+    lugarRecogida = lugar,
+    vector = vector,
+    enfermedad = enfermedad,
+    fecha = fecha,
+    numero = numero,
+    genero = genero,
+    latitud = latitud,
+    longitud = longitud
+)

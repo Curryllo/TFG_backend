@@ -8,3 +8,10 @@ interface ServicioRepositorioFormularioHumano {
 
     fun findAll(): List<FormularioHumano>
 }
+
+interface ServicioRepositorioFormularioMonitoreo {
+
+    fun save(form: FormularioMonitoreo): FormularioMonitoreo
+
+    fun findAll(): List<FormularioMonitoreo>
+}
