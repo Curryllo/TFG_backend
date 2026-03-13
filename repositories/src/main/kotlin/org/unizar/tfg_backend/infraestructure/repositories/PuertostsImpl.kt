@@ -2,10 +2,12 @@
 
 package org.unizar.tfg_backend.infraestructure.repositories
 
+import org.springframework.scheduling.annotation.Async
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
+import java.io.File
 
 class ServicioRepositorioFormularioHumanoImpl(
     private val repositorioFormularioHumano: RepositorioFormularioHumano
@@ -40,10 +42,15 @@ class ServicioRepositorioFormularioHumanoImpl(
 }
 
 class ServicioRepositorioFormularioMonitoreoImpl(
-    private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo
+    private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo,
+    private val servicioETL: ServicioETL
 ) : ServicioRepositorioFormularioMonitoreo {
-    override fun save(form: FormularioMonitoreo): FormularioMonitoreo =
-        repositorioFormularioMonitoreo.save(form.toEntity()).toDomain()
+    override fun save(form: FormularioMonitoreo): FormularioMonitoreo {
+        val resultado = repositorioFormularioMonitoreo.save(form.toEntity()).toDomain()
+        servicioETL.ejecutarETLMonitoreo()
+        return resultado
+    }
+
 
     override fun findAll(): List<FormularioMonitoreo> {
         val list = repositorioFormularioMonitoreo.findAll()
