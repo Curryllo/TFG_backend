@@ -2,12 +2,10 @@
 
 package org.unizar.tfg_backend.infraestructure.repositories
 
-import org.springframework.scheduling.annotation.Async
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
-import java.io.File
 
 class ServicioRepositorioFormularioHumanoImpl(
     private val repositorioFormularioHumano: RepositorioFormularioHumano

@@ -7,7 +7,7 @@ import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
 import java.time.LocalDate
 
 interface LogFormularioMonitoreoUseCase {
-    fun log(l: String?, v: String, e: String, f: LocalDate, n: Int, g: Char?, lat: Double?, long: Double?) : FormularioMonitoreo
+    fun log(l: String?, v: String, e: String?, f: LocalDate, n: Int, g: Char?, lat: Double?, long: Double?) : FormularioMonitoreo
 }
 
 class LogFormularioMonitoreoUseCaseImpl (
@@ -16,7 +16,7 @@ class LogFormularioMonitoreoUseCaseImpl (
     override fun log(
         l: String?,
         v: String,
-        e: String,
+        e: String?,
         f: LocalDate,
         n: Int,
         g: Char?,

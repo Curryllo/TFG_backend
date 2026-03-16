@@ -7,31 +7,32 @@ import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import java.time.LocalDate
 
 interface LogFormularioHumanoUseCase {
-    fun log(e: Short, s: Char, mC: Short?, mR: Short?, mD: Short?,
-            fIS: LocalDate?, d: Boolean, h: Boolean): FormularioHumano
+    fun log(ed: Short, s: Char, fC: LocalDate, en: String, p: String,
+            pR: Char, mR: String, d: Boolean, h: Boolean): FormularioHumano
 }
 
 class LogFormularioHumanoUseCaseImpl (
     private val repositorioFormularioHumano: ServicioRepositorioFormularioHumano
 ) : LogFormularioHumanoUseCase {
     override fun log(
-        e: Short,
+        ed: Short,
         s: Char,
-        mC: Short?,
-        mR: Short?,
-        mD: Short?,
-        fIS: LocalDate?,
+        fC: LocalDate,
+        en: String,
+        p: String,
+        pR: Char,
+        mR: String,
         d: Boolean,
         h: Boolean
     ): FormularioHumano {
         val form = FormularioHumano(
-            edad = e,
+            edad = ed,
             sexo = s,
-            municipioCaso = mC,
+            fechaCaso = fC,
+            enfermedad = en,
+            pais = p,
+            provinciaResidencia = pR,
             municipioResidencia = mR,
-            municipioDeclarante = mD,
-            fechaInicioSintomas = fIS,
-            fechaActual = LocalDate.now(),
             defuncion = d,
             hospitalizado = h
         )

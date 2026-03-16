@@ -32,10 +32,11 @@ interface Controlador {
 data class FormularioHumanosIn (
     val edad: Short = 0,
     val sexo: Char = 'U',
-    val fechaInicioSintomas: LocalDate = LocalDate.now(),
-    val municipioCaso: Short? = null,
-    val municipioResidencia: Short? = null,
-    val municipioDeclarante: Short? = null,
+    val fechaCaso: LocalDate = LocalDate.now(),
+    val enfermedad: String = "",
+    val pais: String = "",
+    val provinciaResidencia: Char = 'U',
+    val municipioResidencia: String = "",
     val defuncion: Boolean = false,
     val casoHospitalizado: Boolean = false
 )
@@ -43,7 +44,7 @@ data class FormularioHumanosIn (
 data class FormularioMonitoreoIn(
     val lugarRecogida: String? = null,
     val vector: String = "",
-    val enfermedad: String = "",
+    val enfermedad: String? = null,
     val fecha: LocalDate = LocalDate.now(),
     val numero: Int = 1,
     val genero: Char? = 'M',
@@ -111,15 +112,16 @@ class ControladorImpl(
     @PostMapping(value = ["/api/formHumanos"])
     override fun guardarFormularioHumano(
         @RequestBody datos: FormularioHumanosIn, request: HttpServletRequest): ResponseEntity<Any> {
-        //println("Ha entrado")
-        //println("Edad: " + datos.edad)
+        println("Ha entrado")
+        println("Edad: " + datos.edad)
         val resultado = logFormularioHumanoUseCase.log(
-            e = datos.edad,
+            ed = datos.edad,
             s = datos.sexo,
-            mC = datos.municipioCaso,
+            fC = datos.fechaCaso,
+            en = datos.enfermedad,
+            p = datos.pais,
+            pR = datos.provinciaResidencia,
             mR = datos.municipioResidencia,
-            mD = datos.municipioDeclarante,
-            fIS = datos.fechaInicioSintomas,
             d = datos.defuncion,
             h = datos.casoHospitalizado
         )
@@ -142,7 +144,7 @@ class ControladorImpl(
     @PostMapping(value = ["/api/formMonitoreo"])
     override fun guardarFormularioMonitoreo(
         @RequestBody datos: FormularioMonitoreoIn, request: HttpServletRequest): ResponseEntity<Any> {
-        println("Ha entrado")
+        //println("Ha entrado")
         val datosCompletos = completarDatosGeograficos(datos)
 
         val resultado = logFormularioMonitoreoUseCase.log(

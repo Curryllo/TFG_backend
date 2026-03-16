@@ -19,16 +19,16 @@ class EntidadFormularioHumano(
     val edad: Short,
     @Column(name = "sexo")
     val sexo: Char,
-    @Column(name = "municipiocaso")
-    val municipioCaso: Short?,
+    @Column(name = "fechacaso")
+    val fechaCaso: LocalDate,
+    @Column(name = "enfermedad")
+    val enfermedad: String,
+    @Column(name = "pais")
+    val pais: String,
+    @Column(name = "provinciaresidencia")
+    val provinciaResidencia: Char,
     @Column(name = "municipioresidencia")
-    val municipioResidencia: Short?,
-    @Column(name = "municipiodeclarante")
-    val municipioDeclarante: Short?,
-    @Column(name = "fechainiciosintomas")
-    val fechaInicioSintomas: LocalDate?,
-    @Column(name = "fechac  aso")
-    val fechaActual: LocalDate,
+    val municipioResidencia: String,
     @Column(name = "defuncion")
     val defuncion: Boolean,
     @Column(name = "casohospitalizado")
@@ -50,7 +50,7 @@ class EntidadFormularioMonitoreo(
     @Column(name = "vector")
     val vector: String,
     @Column(name = "enfermedad")
-    val enfermedad: String,
+    val enfermedad: String?,
     @Column(name = "fecha")
     val fecha: LocalDate,
     @Column(name = "numero")
