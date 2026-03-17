@@ -7,32 +7,14 @@ import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
 import java.time.LocalDate
 
 interface LogFormularioMonitoreoUseCase {
-    fun log(l: String?, v: String, e: String?, f: LocalDate, n: Int, g: Char?, lat: Double?, long: Double?) : FormularioMonitoreo
+    fun log(f: FormularioMonitoreo) : FormularioMonitoreo
 }
 
 class LogFormularioMonitoreoUseCaseImpl (
     private val repositorioFormularioMonitoreo: ServicioRepositorioFormularioMonitoreo
 ) : LogFormularioMonitoreoUseCase {
-    override fun log(
-        l: String?,
-        v: String,
-        e: String?,
-        f: LocalDate,
-        n: Int,
-        g: Char?,
-        lat: Double?,
-        long: Double?): FormularioMonitoreo {
-            val form = FormularioMonitoreo(
-                l,
-                v,
-                e,
-                f,
-                n,
-                g,
-                lat,
-                long,
-            )
-            repositorioFormularioMonitoreo.save(form)
-            return form
+    override fun log(f: FormularioMonitoreo): FormularioMonitoreo {
+        repositorioFormularioMonitoreo.save(f)
+        return f
     }
 }

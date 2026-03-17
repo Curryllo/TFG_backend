@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
-import java.time.LocalDate
+import io.swagger.v3.oas.annotations.tags.Tag
 
 interface Controlador {
     fun guardarFormularioHumano(datos: FormularioHumanosIn, request: HttpServletRequest) : ResponseEntity<Any>
@@ -29,28 +29,7 @@ interface Controlador {
 }
 
 
-data class FormularioHumanosIn (
-    val edad: Short = 0,
-    val sexo: Char = 'U',
-    val fechaCaso: LocalDate = LocalDate.now(),
-    val enfermedad: String = "",
-    val pais: String = "",
-    val provinciaResidencia: Char = 'U',
-    val municipioResidencia: String = "",
-    val defuncion: Boolean = false,
-    val casoHospitalizado: Boolean = false
-)
 
-data class FormularioMonitoreoIn(
-    val lugarRecogida: String? = null,
-    val vector: String = "",
-    val enfermedad: String? = null,
-    val fecha: LocalDate = LocalDate.now(),
-    val numero: Int = 1,
-    val genero: Char? = 'M',
-    val latitud: Double? = null,
-    val longitud: Double? = null
-)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NominatimSearchResponse(
@@ -64,6 +43,7 @@ data class NominatimReverseResponse(
 )
 
 @RestController
+@Tag(name = "Controlador", description = "Gestión de información")
 class ControladorImpl(
     val logFormularioHumanoUseCase: LogFormularioHumanoUseCase,
     val obtenerFormulariosHumanosUseCase: ObtenerFormulariosHumanosUseCase,
@@ -114,18 +94,8 @@ class ControladorImpl(
         @RequestBody datos: FormularioHumanosIn, request: HttpServletRequest): ResponseEntity<Any> {
         println("Ha entrado")
         println("Edad: " + datos.edad)
-        val resultado = logFormularioHumanoUseCase.log(
-            ed = datos.edad,
-            s = datos.sexo,
-            fC = datos.fechaCaso,
-            en = datos.enfermedad,
-            p = datos.pais,
-            pR = datos.provinciaResidencia,
-            mR = datos.municipioResidencia,
-            d = datos.defuncion,
-            h = datos.casoHospitalizado
-        )
-
+        val formularioDominio = datos.toDomain()
+        val resultado = logFormularioHumanoUseCase.log(formularioDominio)
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }
 
@@ -146,17 +116,8 @@ class ControladorImpl(
         @RequestBody datos: FormularioMonitoreoIn, request: HttpServletRequest): ResponseEntity<Any> {
         //println("Ha entrado")
         val datosCompletos = completarDatosGeograficos(datos)
-
-        val resultado = logFormularioMonitoreoUseCase.log(
-            l = datosCompletos.lugarRecogida,
-            v = datosCompletos.vector,
-            e = datosCompletos.enfermedad,
-            f = datosCompletos.fecha,
-            n = datosCompletos.numero,
-            g = datosCompletos.genero,
-            lat = datosCompletos.latitud,
-            long = datosCompletos.longitud
-        )
+        val formularioDominio = datosCompletos.toDomain()
+        val resultado = logFormularioMonitoreoUseCase.log(formularioDominio)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }
