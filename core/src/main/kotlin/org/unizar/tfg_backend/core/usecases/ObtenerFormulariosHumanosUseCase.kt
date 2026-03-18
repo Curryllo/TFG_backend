@@ -1,3 +1,4 @@
+@file:Suppress("SpellCheckingInspection")
 package org.unizar.tfg_backend.core.usecases
 
 import org.unizar.tfg_backend.core.FormularioHumano

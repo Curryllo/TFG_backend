@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumano
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreo
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioETL
@@ -35,4 +36,7 @@ class ApplicationConfiguration (
 
     @Bean
     fun logFormularioMonitoreoUseCase() = LogFormularioMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
+
+    @Bean
+    fun obtenerFormulariosMonitoreoUseCase() = ObtenerFormulariosMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
 }

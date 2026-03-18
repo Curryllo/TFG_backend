@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
-import io.swagger.v3.oas.annotations.tags.Tag
+import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCase
 
 interface Controlador {
     fun guardarFormularioHumano(datos: FormularioHumanosIn, request: HttpServletRequest) : ResponseEntity<Any>
     fun obtenerDatosHumanos(request: HttpServletRequest) : ResponseEntity<Any>
     fun guardarFormularioMonitoreo(datos: FormularioMonitoreoIn, request: HttpServletRequest) : ResponseEntity<Any>
+    fun obtenerDatosMonitoreo(request: HttpServletRequest) : ResponseEntity<Any>
     fun completarDatosGeograficos(datos: FormularioMonitoreoIn) : FormularioMonitoreoIn
 }
 
@@ -43,11 +44,11 @@ data class NominatimReverseResponse(
 )
 
 @RestController
-@Tag(name = "Controlador", description = "Gestión de información")
 class ControladorImpl(
     val logFormularioHumanoUseCase: LogFormularioHumanoUseCase,
     val obtenerFormulariosHumanosUseCase: ObtenerFormulariosHumanosUseCase,
-    val logFormularioMonitoreoUseCase: LogFormularioMonitoreoUseCase
+    val logFormularioMonitoreoUseCase: LogFormularioMonitoreoUseCase,
+    val obtenerFormulariosMonitoreoUseCase: ObtenerFormulariosMonitoreoUseCase
 ) : Controlador {
     private val restTemplate = RestTemplate()
     private val nominatimUrl = "https://nominatim.openstreetmap.org"
@@ -121,6 +122,16 @@ class ControladorImpl(
 
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }
-    
+
+    @GetMapping(value = ["/api/datosMonitoreo"])
+    override fun obtenerDatosMonitoreo(request: HttpServletRequest): ResponseEntity<Any> {
+        val lista = obtenerFormulariosMonitoreoUseCase.ejecutar()
+
+        return if (lista.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(lista)
+        }
+    }
 
 }
