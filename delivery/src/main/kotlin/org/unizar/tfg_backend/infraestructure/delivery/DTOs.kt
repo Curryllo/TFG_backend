@@ -26,3 +26,11 @@ data class FormularioMonitoreoIn(
     val latitud: Double? = null,
     val longitud: Double? = null
 )
+
+data class FormularioGarrapatasIn(
+    val municipio: String = "",
+    val especie: String = "",
+    val fecha: LocalDate = LocalDate.now(),
+    val enHumano: Boolean = false,
+    val animal: String = ""
+)

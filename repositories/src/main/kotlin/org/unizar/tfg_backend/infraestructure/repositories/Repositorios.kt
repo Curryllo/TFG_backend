@@ -7,3 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface RepositorioFormularioHumano : JpaRepository<EntidadFormularioHumano,Long>
 
 interface RepositorioFormularioMonitoreo : JpaRepository<EntidadFormularioMonitoreo,Long>
+
+interface RepositorioFormularioGarrapatas: JpaRepository<EntidadFormularioGarrapata,Long>

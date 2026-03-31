@@ -1,5 +1,6 @@
 package org.unizar.tfg_backend.infraestructure.delivery
 
+import org.unizar.tfg_backend.core.FormularioGarrapatas
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 
@@ -24,4 +25,12 @@ fun FormularioMonitoreoIn.toDomain() = FormularioMonitoreo(
     genero = genero,
     longitud = longitud,
     latitud = latitud,
+)
+
+fun FormularioGarrapatasIn.toDomain() = FormularioGarrapatas(
+    municipio = municipio,
+    especie = especie,
+    fecha = fecha,
+    enHumano = enHumano,
+    animal = animal
 )

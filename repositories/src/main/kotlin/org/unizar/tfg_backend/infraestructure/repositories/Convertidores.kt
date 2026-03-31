@@ -2,6 +2,7 @@
 
 package org.unizar.tfg_backend.infraestructure.repositories
 
+import org.unizar.tfg_backend.core.FormularioGarrapatas
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 
@@ -52,4 +53,21 @@ fun EntidadFormularioMonitoreo.toDomain() = FormularioMonitoreo(
     genero = genero,
     latitud = latitud,
     longitud = longitud
+)
+
+fun FormularioGarrapatas.toEntity() = EntidadFormularioGarrapata(
+    idForm = null,
+    municipioRecogida = municipio,
+    especie = especie,
+    fechaRecogida = fecha,
+    enHumano = enHumano,
+    animal = animal
+)
+
+fun EntidadFormularioGarrapata.toDomain() = FormularioGarrapatas(
+    municipio = municipioRecogida,
+    especie = especie,
+    fecha = fechaRecogida,
+    enHumano = enHumano,
+    animal = animal
 )

@@ -15,3 +15,9 @@ interface ServicioRepositorioFormularioMonitoreo {
 
     fun findAll(): List<FormularioMonitoreo>
 }
+
+interface ServicioRepositorioFormularioGarrapatas {
+    fun save(form: FormularioGarrapatas): FormularioGarrapatas
+
+    fun findAll(): List<FormularioGarrapatas>
+}

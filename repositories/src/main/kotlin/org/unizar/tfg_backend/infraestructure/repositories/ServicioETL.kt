@@ -6,7 +6,7 @@ import java.io.File
 
 open class ServicioETL {
     @Async
-    open fun ejecutarETLMonitoreo(){
+    open fun ejecutarETL(){
         try{
             val nombreScript = "ProcesoETL.bat"
             val rutaScript = "/mnt/c/Users/Curro/Desktop/ScriptsTFG"

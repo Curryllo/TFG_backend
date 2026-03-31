@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCase
+import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCase
 
@@ -26,6 +28,8 @@ interface Controlador {
     fun obtenerDatosHumanos(request: HttpServletRequest) : ResponseEntity<Any>
     fun guardarFormularioMonitoreo(datos: FormularioMonitoreoIn, request: HttpServletRequest) : ResponseEntity<Any>
     fun obtenerDatosMonitoreo(request: HttpServletRequest) : ResponseEntity<Any>
+    fun guardarFormularioGarrapatas(datos: FormularioGarrapatasIn, request: HttpServletRequest) : ResponseEntity<Any>
+    fun obtenerDatosGarrapatas(request: HttpServletRequest) : ResponseEntity<Any>
     fun completarDatosGeograficos(datos: FormularioMonitoreoIn) : FormularioMonitoreoIn
 }
 
@@ -48,7 +52,9 @@ class ControladorImpl(
     val logFormularioHumanoUseCase: LogFormularioHumanoUseCase,
     val obtenerFormulariosHumanosUseCase: ObtenerFormulariosHumanosUseCase,
     val logFormularioMonitoreoUseCase: LogFormularioMonitoreoUseCase,
-    val obtenerFormulariosMonitoreoUseCase: ObtenerFormulariosMonitoreoUseCase
+    val obtenerFormulariosMonitoreoUseCase: ObtenerFormulariosMonitoreoUseCase,
+    val logFormularioGarrapatasUseCase: LogFormularioGarrapatasUseCase,
+    val obtenerFormulariosGarrapatasUseCase: ObtenerFormulariosGarrapatasUseCase
 ) : Controlador {
     private val restTemplate = RestTemplate()
     private val nominatimUrl = "https://nominatim.openstreetmap.org"
@@ -126,6 +132,28 @@ class ControladorImpl(
     @GetMapping(value = ["/api/datosMonitoreo"])
     override fun obtenerDatosMonitoreo(request: HttpServletRequest): ResponseEntity<Any> {
         val lista = obtenerFormulariosMonitoreoUseCase.ejecutar()
+
+        return if (lista.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(lista)
+        }
+    }
+
+    @PostMapping(value = ["/api/formGarrapatas"])
+    override fun guardarFormularioGarrapatas(
+        @RequestBody datos: FormularioGarrapatasIn,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        println("Datos recibidos en controlador garrapatas $datos")
+        val formularioDominio = datos.toDomain()
+        val resultado = logFormularioGarrapatasUseCase.log(formularioDominio)
+        return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
+    }
+
+    @GetMapping(value = ["/api/datosGarrapatas"])
+    override fun obtenerDatosGarrapatas(request: HttpServletRequest): ResponseEntity<Any> {
+        val lista = obtenerFormulariosGarrapatasUseCase.ejecutar()
 
         return if (lista.isEmpty()) {
             ResponseEntity.noContent().build()
