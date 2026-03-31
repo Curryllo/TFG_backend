@@ -36,7 +36,7 @@ class ApplicationConfiguration (
 
     @Bean
     fun servicioRepositorioFormularioGarrapatas() =
-        ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatas)
+        ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatas, servicioETL())
 
     @Bean
     fun logFormularioHumanoUseCase() =

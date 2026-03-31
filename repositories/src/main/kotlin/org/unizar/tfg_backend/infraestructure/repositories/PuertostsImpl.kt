@@ -84,7 +84,8 @@ class ServicioRepositorioFormularioMonitoreoImpl(
 }
 
 class ServicioRepositorioFormularioGarrapatasImpl(
-    private val repositorioFormularioGarrapatas: RepositorioFormularioGarrapatas
+    private val repositorioFormularioGarrapatas: RepositorioFormularioGarrapatas,
+    private val servicioETL: ServicioETL
 ) : ServicioRepositorioFormularioGarrapatas {
 
     /**
@@ -107,6 +108,7 @@ class ServicioRepositorioFormularioGarrapatasImpl(
 
     override fun save(form: FormularioGarrapatas): FormularioGarrapatas {
         val resultado = repositorioFormularioGarrapatas.save(form.toEntity()).toDomain()
+        servicioETL.ejecutarETL()
         return resultado
     }
 
