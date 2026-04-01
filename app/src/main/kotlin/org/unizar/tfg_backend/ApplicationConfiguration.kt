@@ -14,25 +14,33 @@ import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormulario
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumano
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreo
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioETL
+import org.unizar.tfg_backend.infraestructure.repositories.ServicioEmailImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioGarrapatasImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioHumanoImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioMonitoreoImpl
+import org.springframework.mail.javamail.JavaMailSender
+import org.unizar.tfg_backend.core.ServicioEmail
 
 @Configuration
 class ApplicationConfiguration (
     private val repositorioFormularioHumano: RepositorioFormularioHumano,
     private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo,
-    private val repositorioFormularioGarrapatas: RepositorioFormularioGarrapatas
+    private val repositorioFormularioGarrapatas: RepositorioFormularioGarrapatas,
+    private val mailSender: JavaMailSender
 ) {
     @Bean
     fun servicioETL() = ServicioETL()
+
+    @Bean
+    open fun servicioEmail(): ServicioEmail = ServicioEmailImpl(mailSender)
+
     @Bean
     fun servicioRepositorioFormilarioHumano() =
         ServicioRepositorioFormularioHumanoImpl(repositorioFormularioHumano, servicioETL())
 
     @Bean
     fun servicioRepositorioFormularioMonitoreo() =
-        ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreo, servicioETL())
+        ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreo, servicioETL(), servicioEmail())
 
     @Bean
     fun servicioRepositorioFormularioGarrapatas() =

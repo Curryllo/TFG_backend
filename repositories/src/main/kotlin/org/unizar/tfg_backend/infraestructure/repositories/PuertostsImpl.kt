@@ -5,9 +5,13 @@ package org.unizar.tfg_backend.infraestructure.repositories
 import org.unizar.tfg_backend.core.FormularioGarrapatas
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
+import org.unizar.tfg_backend.core.ServicioEmail
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioGarrapatas
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
+import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.scheduling.annotation.Async
 
 class ServicioRepositorioFormularioHumanoImpl(
     private val repositorioFormularioHumano: RepositorioFormularioHumano,
@@ -48,7 +52,8 @@ class ServicioRepositorioFormularioHumanoImpl(
 
 class ServicioRepositorioFormularioMonitoreoImpl(
     private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo,
-    private val servicioETL: ServicioETL
+    private val servicioETL: ServicioETL,
+    private val servicioEmail: ServicioEmail
 ) : ServicioRepositorioFormularioMonitoreo {
 
     /**
@@ -71,6 +76,10 @@ class ServicioRepositorioFormularioMonitoreoImpl(
 
     override fun save(form: FormularioMonitoreo): FormularioMonitoreo {
         val resultado = repositorioFormularioMonitoreo.save(form.toEntity()).toDomain()
+        if (resultado.enfermedad != null) {
+            servicioEmail.sendAlertaVectorInfectado(resultado.enfermedad!!, resultado.lugarRecogida, resultado.vector)
+            println("Email enviado")
+        }
         servicioETL.ejecutarETL()
         return resultado
     }
@@ -115,5 +124,25 @@ class ServicioRepositorioFormularioGarrapatasImpl(
     override fun findAll(): List<FormularioGarrapatas> {
         val list = repositorioFormularioGarrapatas.findAll()
         return list.map { it.toDomain() }
+    }
+}
+
+open class ServicioEmailImpl(
+    private val mailSender: JavaMailSender
+) : ServicioEmail {
+    @Async
+    override fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String) {
+        val mensaje = SimpleMailMessage()
+
+        mensaje.from = "onboarding@resend.dev"
+        mensaje.setTo("842545@unizar.es")
+        mensaje.subject = "ALERTA: Vector infectado con $enfermedad"
+        mensaje.text =
+            """ALERTA de Salud Pública
+                |Se ha registrado un vector portador de $enfermedad:
+                |- Especie: $vector
+                |- Zona: $lugar
+            """.trimMargin()
+        mailSender.send(mensaje)
     }
 }

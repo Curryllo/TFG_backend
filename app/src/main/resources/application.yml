@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: smtp.resend.com
+    port: 465
+    username: resend
+    password: re_Ja7AAEt3_BfJYF8HUaSThYjG4G2WQaRRZ
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true

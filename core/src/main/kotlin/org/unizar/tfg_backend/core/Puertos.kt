@@ -21,3 +21,7 @@ interface ServicioRepositorioFormularioGarrapatas {
 
     fun findAll(): List<FormularioGarrapatas>
 }
+
+interface  ServicioEmail {
+    fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String)
+}
