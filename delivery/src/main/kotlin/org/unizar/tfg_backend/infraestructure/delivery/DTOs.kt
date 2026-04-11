@@ -34,3 +34,23 @@ data class FormularioGarrapatasIn(
     val enHumano: Boolean = false,
     val animal: String = ""
 )
+
+data class LoginIn(
+    val mail: String = "",
+    val password: String = ""
+)
+
+data class LoginOut(
+    val tokenAcceso: String = "",
+    val tokenRefresco: String = ""
+)
+
+data class SingIn(
+    val nombre: String = "",
+    val apellido1: String = "",
+    val apellido2: String = "",
+    val puesto: String = "",
+    val email: String = "",
+    val rol: String = "",
+    val password: String = ""
+)

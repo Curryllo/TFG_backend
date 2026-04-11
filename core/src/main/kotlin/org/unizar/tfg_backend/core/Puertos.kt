@@ -22,6 +22,34 @@ interface ServicioRepositorioFormularioGarrapatas {
     fun findAll(): List<FormularioGarrapatas>
 }
 
-interface  ServicioEmail {
+interface ServicioRepositorioUsuarios {
+    fun save(usuario: Usuario): Usuario
+
+    fun findAll(): List<Usuario>
+
+    fun findByEmail(email: String): Usuario?
+}
+
+
+interface ServicioEmail {
     fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String)
+}
+
+interface GeneradorToken {
+    fun generarToken(email: String, rol: String) : String
+}
+
+interface InformacionUsuario {
+    fun autenticar(email: String, password: String) : Usuario
+}
+
+data class TokensDominio(
+    val tokenAcceso: String,
+    val tokenRefresco: String
+)
+
+interface ServicioAutenticacion {
+    fun autenticar(email: String, password: String) : TokensDominio
+
+    fun registrar(usuario: Usuario)
 }

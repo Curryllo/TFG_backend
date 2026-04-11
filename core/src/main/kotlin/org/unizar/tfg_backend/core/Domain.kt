@@ -35,3 +35,13 @@ data class FormularioGarrapatas(
     val enHumano: Boolean,
     val animal: String
 )
+
+data class Usuario(
+    val nombre: String,
+    val apellido1: String,
+    val apellido2: String,
+    val puesto: String,
+    val email: String,
+    val rol: String,
+    val password: String
+)

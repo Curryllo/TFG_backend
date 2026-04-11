@@ -84,3 +84,44 @@ class EntidadFormularioGarrapata(
     val animal: String
 )
 
+@Entity
+@Table(name = "usuarios")
+@Suppress("LongParameterList")
+class EntidadUsuario(
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuarios_gen")
+    @SequenceGenerator(name = "usuarios_gen", sequenceName = "usuarios_seq", allocationSize = 1)
+    @Column(name = "idusuario")
+    val idUsuario: Int?,
+    @Column(name = "nombre")
+    val nombre: String,
+    @Column(name = "apellido1")
+    val apellido1: String,
+    @Column(name = "apellido2")
+    val apellido2: String,
+    @Column(name = "puesto")
+    val puesto: String,
+    @Column(name = "email")
+    val email: String,
+    @Column(name = "rol")
+    val rol: String,
+    @Column(name = "password")
+    val password: String
+)
+
+@Entity
+@Table(name = "refresh_tokens")
+class EntidadRefreshToken(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
+    // Le damos length = 500 porque los JWT son cadenas de texto bastante largas
+    @Column(nullable = false, unique = true, length = 500)
+    val token: String,
+
+    // Guardamos el email para saber de quién es este token
+    @Column(nullable = false)
+    val emailUsuario: String
+)
+

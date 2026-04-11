@@ -3,6 +3,7 @@ package org.unizar.tfg_backend.infraestructure.delivery
 import org.unizar.tfg_backend.core.FormularioGarrapatas
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
+import org.unizar.tfg_backend.core.Usuario
 
 fun FormularioHumanosIn.toDomain() = FormularioHumano(
     edad = edad,
@@ -33,4 +34,14 @@ fun FormularioGarrapatasIn.toDomain() = FormularioGarrapatas(
     fecha = fecha,
     enHumano = enHumano,
     animal = animal
+)
+
+fun SingIn.toDomain() = Usuario(
+    nombre = nombre,
+    apellido1 = apellido1,
+    apellido2 = apellido2,
+    puesto = puesto,
+    email = email,
+    rol = rol,
+    password = password,
 )

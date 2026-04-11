@@ -10,41 +10,43 @@ import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
-import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioGarrapatas
-import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumano
-import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreo
+import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioGarrapatasJpa
+import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumanoJpa
+import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreoJpa
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioETL
-import org.unizar.tfg_backend.infraestructure.repositories.ServicioEmailImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioGarrapatasImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioHumanoImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioMonitoreoImpl
-import org.springframework.mail.javamail.JavaMailSender
+import org.unizar.tfg_backend.core.ServicioAutenticacion
 import org.unizar.tfg_backend.core.ServicioEmail
+import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.RegistrarUseCase
+import org.unizar.tfg_backend.core.usecases.RegistrarUseCaseImpl
 
 @Configuration
 class ApplicationConfiguration (
-    private val repositorioFormularioHumano: RepositorioFormularioHumano,
-    private val repositorioFormularioMonitoreo: RepositorioFormularioMonitoreo,
-    private val repositorioFormularioGarrapatas: RepositorioFormularioGarrapatas,
-    private val mailSender: JavaMailSender
+    private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa,
+    private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa,
+    private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa,
+    private val servicioAutenticacion: ServicioAutenticacion,
+    private val servicioEmail: ServicioEmail
 ) {
     @Bean
     fun servicioETL() = ServicioETL()
 
     @Bean
-    open fun servicioEmail(): ServicioEmail = ServicioEmailImpl(mailSender)
-
-    @Bean
     fun servicioRepositorioFormilarioHumano() =
-        ServicioRepositorioFormularioHumanoImpl(repositorioFormularioHumano, servicioETL())
+        ServicioRepositorioFormularioHumanoImpl(repositorioFormularioHumanoJpa, servicioETL())
 
     @Bean
     fun servicioRepositorioFormularioMonitoreo() =
-        ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreo, servicioETL(), servicioEmail())
+        ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreoJpa, servicioETL(), servicioEmail)
 
     @Bean
     fun servicioRepositorioFormularioGarrapatas() =
-        ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatas, servicioETL())
+        ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatasJpa, servicioETL())
+
+
 
     @Bean
     fun logFormularioHumanoUseCase() =
@@ -67,6 +69,13 @@ class ApplicationConfiguration (
         ObtenerFormulariosMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
 
     @Bean
-    fun obtenerFormulariosGarrapatasUseCase()
-    = ObtenerFormulariosGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas())
+    fun obtenerFormulariosGarrapatasUseCase() =
+        ObtenerFormulariosGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas())
+
+    @Bean
+    fun iniciarSesionUseCase() = InicarSesionUseCaseImpl(servicioAutenticacion)
+
+    @Bean
+    fun registrarUseCase() = RegistrarUseCaseImpl(servicioAutenticacion)
+
 }
