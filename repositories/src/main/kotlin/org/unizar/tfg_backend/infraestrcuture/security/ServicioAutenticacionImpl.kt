@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.unizar.tfg_backend.core.ServicioAutenticacion
 import org.unizar.tfg_backend.core.TokensDominio
 import org.unizar.tfg_backend.core.Usuario
@@ -15,67 +16,73 @@ import org.unizar.tfg_backend.infraestructure.repositories.EntidadUsuario
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioRefrescoToken
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioUsuariosJpa
 
-
 @Service
-class ServicioAutenticacionImpl (
-    private val authManager: AuthenticationManager,
-    private val encoder: PasswordEncoder,
-    private val userDetailsService: UserDetailsService,
-    private val generadorToken: GeneradorTokenImpl,
-    private val repositorioRefrescoToken: RepositorioRefrescoToken,
-    private val repositorioUsuarios: RepositorioUsuariosJpa,
-    @Value("\${jwt.accessTokenExpiration:86400000}") private val accessTokenExpiration: Long, // Por defecto 1 día
-    @Value("\${jwt.refreshTokenExpiration:604800000}") private val refreshTokenExpiration: Long // Por defecto 7 días
+open class ServicioAutenticacionImpl(
+        private val authManager: AuthenticationManager,
+        private val encoder: PasswordEncoder,
+        private val userDetailsService: UserDetailsService,
+        private val generadorToken: GeneradorTokenImpl,
+        private val repositorioRefrescoToken: RepositorioRefrescoToken,
+        private val repositorioUsuarios: RepositorioUsuariosJpa,
+        @Value("\${jwt.accessTokenExpiration:900000}") //15 mins
+        private val accessTokenExpiration: Long,
+        @Value("\${jwt.refreshTokenExpiration:3600000}") //60 mins
+        private val refreshTokenExpiration: Long
 ) : ServicioAutenticacion {
     override fun autenticar(email: String, contrasena: String): TokensDominio {
-        authManager.authenticate(
-            UsernamePasswordAuthenticationToken(
-                email,
-                contrasena
-            )
-        )
+        authManager.authenticate(UsernamePasswordAuthenticationToken(email, contrasena))
 
         val user = userDetailsService.loadUserByUsername(email)
 
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
 
+        repositorioRefrescoToken.save(refreshToken, user)
 
-        return TokensDominio(
-            tokenAcceso = accessToken,
-            tokenRefresco = refreshToken
-        )
+        return TokensDominio(tokenAcceso = accessToken, tokenRefresco = refreshToken)
     }
 
     override fun registrar(usuario: Usuario) {
         val contrasenaHash = encoder.encode(usuario.password)
 
-        val entidad = EntidadUsuario(
-            idUsuario = null,
-            nombre = usuario.nombre,
-            apellido1 = usuario.apellido1,
-            apellido2 = usuario.apellido2,
-            puesto = usuario.puesto,
-            email = usuario.email,
-            rol = usuario.rol,
-            password = contrasenaHash
-        )
+        val entidad =
+                EntidadUsuario(
+                        idUsuario = null,
+                        nombre = usuario.nombre,
+                        apellido1 = usuario.apellido1,
+                        apellido2 = usuario.apellido2,
+                        puesto = usuario.puesto,
+                        email = usuario.email,
+                        rol = usuario.rol,
+                        password = contrasenaHash
+                )
 
         repositorioUsuarios.save(entidad)
     }
 
-    fun refreshAccessToken(refreshToken: String): String {
+    @Transactional
+    override fun refrescarTokens(refreshToken: String): TokensDominio {
         val username = generadorToken.extractEmail(refreshToken)
+        val currentUserDetails = userDetailsService.loadUserByUsername(username)
+        val refreshTokenUserDetails = repositorioRefrescoToken.findUserDetailsByToken(refreshToken)
 
-        return username.let { user ->
-            val currentUserDetails = userDetailsService.loadUserByUsername(user)
-            val refreshTokenUserDetails = repositorioRefrescoToken.findUserDetailsByToken(refreshToken)
-
-            if (currentUserDetails.username == refreshTokenUserDetails?.username)
-                createAccessToken(currentUserDetails)
-            else
-                throw AuthenticationServiceException("Invalid refresh token")
+        if (currentUserDetails.username != refreshTokenUserDetails?.username) {
+            throw AuthenticationServiceException("Invalid refresh token")
         }
+
+        // Rotación: borrar el token viejo, generar ambos nuevos
+        repositorioRefrescoToken.deleteByToken(refreshToken)
+
+        val newAccessToken = createAccessToken(currentUserDetails)
+        val newRefreshToken = createRefreshToken(currentUserDetails)
+        repositorioRefrescoToken.save(newRefreshToken, currentUserDetails)
+
+        return TokensDominio(tokenAcceso = newAccessToken, tokenRefresco = newRefreshToken)
+    }
+
+    @Transactional
+    override fun cerrarSesion(refreshToken: String) {
+        repositorioRefrescoToken.deleteByToken(refreshToken)
     }
 
     private fun createAccessToken(user: UserDetails): String {

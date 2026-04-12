@@ -18,30 +18,41 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 open class SecurityConfig(
-    // 🟢 1. Inyectamos tu filtro personalizado
-    private val filtroAutenticacion: FiltroAutenticacion,
-    // 🟢 2. Inyectamos el servicio que busca usuarios en TU base de datos
-    private val userDetailsService: UserDetailsService
+        // 🟢 1. Inyectamos tu filtro personalizado
+        private val filtroAutenticacion: FiltroAutenticacion,
+        // 🟢 2. Inyectamos el servicio que busca usuarios en TU base de datos
+        private val userDetailsService: UserDetailsService
 ) {
 
     @Bean
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf { it.disable() } // Apagamos CSRF (obligatorio al usar JWT)
-            .authorizeHttpRequests { auth ->
-                auth
-                    // 🔓 Dejamos las puertas abiertas SOLO para hacer login y pedir refresco
-                    .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/singIn").permitAll()
-                    // 🔒 Cualquier otra ruta requiere un JWT válido
-                    .anyRequest().authenticated()
-            }
-            .sessionManagement { session ->
-                // No guardamos sesiones en la memoria del servidor
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-            .authenticationProvider(authenticationProvider())
-            // 🟢 3. Metemos tu filtro justo antes de que Spring intente leer contraseñas
-            .addFilterBefore(filtroAutenticacion, UsernamePasswordAuthenticationFilter::class.java)
+                .csrf { it.disable() } // Apagamos CSRF (obligatorio al usar JWT)
+                .authorizeHttpRequests { auth ->
+                    auth
+                            // 🔓 Dejamos las puertas abiertas SOLO para hacer login y pedir
+                            // refresco
+                            .requestMatchers(
+                                    "/api/auth/login",
+                                    "/api/auth/refresh",
+                                    "/api/auth/singIn",
+                                    "/api/auth/logout"
+                            )
+                            .permitAll()
+                            // 🔒 Cualquier otra ruta requiere un JWT válido
+                            .anyRequest()
+                            .authenticated()
+                }
+                .sessionManagement { session ->
+                    // No guardamos sesiones en la memoria del servidor
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                }
+                .authenticationProvider(authenticationProvider())
+                // 🟢 3. Metemos tu filtro justo antes de que Spring intente leer contraseñas
+                .addFilterBefore(
+                        filtroAutenticacion,
+                        UsernamePasswordAuthenticationFilter::class.java
+                )
 
         return http.build()
     }

@@ -3,19 +3,14 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import org.unizar.tfg_backend.core.FormularioGarrapatas
-import org.unizar.tfg_backend.core.ServicioEmail
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioGarrapatas
-import org.springframework.security.core.userdetails.UserDetails
 import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
-import org.unizar.tfg_backend.core.Usuario
 
 class ServicioRepositorioFormularioMonitoreoImpl(
-    private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa,
-    private val servicioETL: ServicioETL,
-    private val servicioEmail: ServicioEmail
+    private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa
 ) : ServicioRepositorioFormularioMonitoreo {
 
     /**
@@ -38,11 +33,6 @@ class ServicioRepositorioFormularioMonitoreoImpl(
 
     override fun save(form: FormularioMonitoreo): FormularioMonitoreo {
         val resultado = repositorioFormularioMonitoreoJpa.save(form.toEntity()).toDomain()
-        if (resultado.enfermedad != null) {
-            servicioEmail.sendAlertaVectorInfectado(resultado.enfermedad!!, resultado.lugarRecogida, resultado.vector)
-            println("Email enviado")
-        }
-        servicioETL.ejecutarETL()
         return resultado
     }
 
@@ -55,8 +45,7 @@ class ServicioRepositorioFormularioMonitoreoImpl(
 }
 
 class ServicioRepositorioFormularioHumanoImpl(
-    private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa,
-    private val servicioETL: ServicioETL
+    private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa
 ) : ServicioRepositorioFormularioHumano {
 
     /**
@@ -79,7 +68,6 @@ class ServicioRepositorioFormularioHumanoImpl(
 
     override fun save(form: FormularioHumano): FormularioHumano {
         val resultado = repositorioFormularioHumanoJpa.save(form.toEntity()).toDomain()
-        servicioETL.ejecutarETL()
         return resultado
     }
 
@@ -92,8 +80,7 @@ class ServicioRepositorioFormularioHumanoImpl(
 }
 
 class ServicioRepositorioFormularioGarrapatasImpl(
-    private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa,
-    private val servicioETL: ServicioETL
+    private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa
 ) : ServicioRepositorioFormularioGarrapatas {
 
     /**
@@ -116,24 +103,12 @@ class ServicioRepositorioFormularioGarrapatasImpl(
 
     override fun save(form: FormularioGarrapatas): FormularioGarrapatas {
         val resultado = repositorioFormularioGarrapatasJpa.save(form.toEntity()).toDomain()
-        servicioETL.ejecutarETL()
         return resultado
     }
 
     override fun findAll(): List<FormularioGarrapatas> {
         val list = repositorioFormularioGarrapatasJpa.findAll()
         return list.map { it.toDomain() }
-    }
-}
-
-
-class RefreshTokenRepository {
-    private val tokens = mutableMapOf<String, UserDetails>()
-
-    fun findUserDetailsByToken(token: String): UserDetails? = tokens[token]
-
-    fun save(token: String, userDetails: UserDetails) {
-        tokens[token] = userDetails
     }
 }
 

@@ -4,78 +4,84 @@ package org.unizar.tfg_backend
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.unizar.tfg_backend.core.ServicioAutenticacion
+import org.unizar.tfg_backend.core.ServicioETL
+import org.unizar.tfg_backend.core.ServicioEmail
+import org.unizar.tfg_backend.core.usecases.CerrarSesionUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.RefrescarTokenUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.RegistrarUseCaseImpl
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioGarrapatasJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumanoJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreoJpa
-import org.unizar.tfg_backend.infraestructure.repositories.ServicioETL
+import org.unizar.tfg_backend.infraestructure.repositories.ServicioETLImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioGarrapatasImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioHumanoImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioMonitoreoImpl
-import org.unizar.tfg_backend.core.ServicioAutenticacion
-import org.unizar.tfg_backend.core.ServicioEmail
-import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
-import org.unizar.tfg_backend.core.usecases.RegistrarUseCase
-import org.unizar.tfg_backend.core.usecases.RegistrarUseCaseImpl
 
 @Configuration
-class ApplicationConfiguration (
-    private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa,
-    private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa,
-    private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa,
-    private val servicioAutenticacion: ServicioAutenticacion,
-    private val servicioEmail: ServicioEmail
+class ApplicationConfiguration(
+        private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa,
+        private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa,
+        private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa,
+        private val servicioAutenticacion: ServicioAutenticacion,
+        private val servicioEmail: ServicioEmail,
+        private val servicioETL: ServicioETL,
 ) {
-    @Bean
-    fun servicioETL() = ServicioETL()
 
     @Bean
     fun servicioRepositorioFormilarioHumano() =
-        ServicioRepositorioFormularioHumanoImpl(repositorioFormularioHumanoJpa, servicioETL())
+            ServicioRepositorioFormularioHumanoImpl(repositorioFormularioHumanoJpa)
 
     @Bean
     fun servicioRepositorioFormularioMonitoreo() =
-        ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreoJpa, servicioETL(), servicioEmail)
+            ServicioRepositorioFormularioMonitoreoImpl(repositorioFormularioMonitoreoJpa)
 
     @Bean
     fun servicioRepositorioFormularioGarrapatas() =
-        ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatasJpa, servicioETL())
-
-
+            ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatasJpa)
 
     @Bean
     fun logFormularioHumanoUseCase() =
-        LogFormularioHumanoUseCaseImpl(servicioRepositorioFormilarioHumano())
+            LogFormularioHumanoUseCaseImpl(servicioRepositorioFormilarioHumano(), servicioETL)
 
     @Bean
     fun obtenerFormulariosHumanosUseCase() =
-        ObtenerFormulariosHumanosUseCaseImpl(servicioRepositorioFormilarioHumano())
+            ObtenerFormulariosHumanosUseCaseImpl(servicioRepositorioFormilarioHumano())
 
     @Bean
     fun logFormularioMonitoreoUseCase() =
-        LogFormularioMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
+            LogFormularioMonitoreoUseCaseImpl(
+                servicioRepositorioFormularioMonitoreo(),
+                servicioEmail,
+                servicioETL)
 
     @Bean
     fun logFormularioGarrapatasUseCase() =
-        LogFormularioGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas())
+            LogFormularioGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas(), servicioETL)
 
     @Bean
     fun obtenerFormulariosMonitoreoUseCase() =
-        ObtenerFormulariosMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
+            ObtenerFormulariosMonitoreoUseCaseImpl(servicioRepositorioFormularioMonitoreo())
 
     @Bean
     fun obtenerFormulariosGarrapatasUseCase() =
-        ObtenerFormulariosGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas())
+            ObtenerFormulariosGarrapatasUseCaseImpl(servicioRepositorioFormularioGarrapatas())
+
+    @Bean fun iniciarSesionUseCase() = InicarSesionUseCaseImpl(servicioAutenticacion)
+
+    @Bean fun registrarUseCase() = RegistrarUseCaseImpl(servicioAutenticacion)
 
     @Bean
-    fun iniciarSesionUseCase() = InicarSesionUseCaseImpl(servicioAutenticacion)
+    fun refrescarTokenUseCase() =
+            RefrescarTokenUseCaseImpl(servicioAutenticacion)
 
     @Bean
-    fun registrarUseCase() = RegistrarUseCaseImpl(servicioAutenticacion)
-
+    fun cerrarSesionUseCase() = CerrarSesionUseCaseImpl(servicioAutenticacion)
 }

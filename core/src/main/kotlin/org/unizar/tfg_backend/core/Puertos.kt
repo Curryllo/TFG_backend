@@ -22,17 +22,13 @@ interface ServicioRepositorioFormularioGarrapatas {
     fun findAll(): List<FormularioGarrapatas>
 }
 
-interface ServicioRepositorioUsuarios {
-    fun save(usuario: Usuario): Usuario
-
-    fun findAll(): List<Usuario>
-
-    fun findByEmail(email: String): Usuario?
-}
-
 
 interface ServicioEmail {
     fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String)
+}
+
+interface ServicioETL {
+    fun ejecutarETL()
 }
 
 interface GeneradorToken {
@@ -52,4 +48,8 @@ interface ServicioAutenticacion {
     fun autenticar(email: String, password: String) : TokensDominio
 
     fun registrar(usuario: Usuario)
+
+    fun refrescarTokens(refreshToken: String) : TokensDominio
+
+    fun cerrarSesion(refreshToken: String)
 }

@@ -10,7 +10,7 @@ open class RepositorioRefrescoToken(
     private val userDetailsService: UserDetailsService
 ) {
 
-    fun findUserDetailsByToken(token: String): UserDetails? {
+    open fun findUserDetailsByToken(token: String): UserDetails? {
         // 1. Buscamos el token en PostgreSQL
         val entidad = jpaRepository.findByToken(token) ?: return null
 
@@ -18,14 +18,19 @@ open class RepositorioRefrescoToken(
         return userDetailsService.loadUserByUsername(entidad.emailUsuario)
     }
 
-    fun save(token: String, userDetails: UserDetails) {
+    open fun save(token: String, userDetails: UserDetails) {
         // Creamos la entidad mapeada
         val entidad = EntidadRefreshToken(
+            id = null,
             token = token,
             emailUsuario = userDetails.username // En tu sistema, username es el email
         )
 
         // La guardamos en PostgreSQL
         jpaRepository.save(entidad)
+    }
+
+    open fun deleteByToken(token: String) {
+        jpaRepository.deleteByToken(token)
     }
 }

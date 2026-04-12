@@ -113,15 +113,16 @@ class EntidadUsuario(
 @Table(name = "refresh_tokens")
 class EntidadRefreshToken(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tokens_gen")
+    @SequenceGenerator(name = "tokens_gen", sequenceName = "tokens_seq", allocationSize = 1)
+    val id: Int?,
 
-    // Le damos length = 500 porque los JWT son cadenas de texto bastante largas
-    @Column(nullable = false, unique = true, length = 500)
+
+    @Column(name = "refresh_token")
     val token: String,
 
-    // Guardamos el email para saber de quién es este token
-    @Column(nullable = false)
+
+    @Column(name = "email")
     val emailUsuario: String
 )
 

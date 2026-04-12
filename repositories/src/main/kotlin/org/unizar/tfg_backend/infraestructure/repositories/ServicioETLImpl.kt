@@ -2,11 +2,14 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import org.springframework.scheduling.annotation.Async
+import org.springframework.stereotype.Service
+import org.unizar.tfg_backend.core.ServicioETL
 import java.io.File
 
-open class ServicioETL {
+@Service
+open class ServicioETLImpl : ServicioETL {
     @Async
-    open fun ejecutarETL(){
+    override fun ejecutarETL(){
         try{
             val nombreScript = "ProcesoETL.bat"
             val rutaScript = "/mnt/c/Users/Curro/Desktop/ScriptsTFG"
