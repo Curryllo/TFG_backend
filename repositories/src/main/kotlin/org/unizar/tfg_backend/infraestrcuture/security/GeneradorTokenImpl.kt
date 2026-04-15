@@ -19,9 +19,9 @@ class GeneradorTokenImpl (
             return SecretKeySpec(keyBytes, 0, keyBytes.size, "HmacSHA256")
         }
 
-    override fun generarToken(email: String, rol: String) : String {
+    override fun generarToken(email: String, rol: String, tiempo: Long) : String {
 
-        val expirationDate = Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)
+        val expirationDate = Date(System.currentTimeMillis() + tiempo)
 
         return Jwts.builder()
             .setSubject(email)

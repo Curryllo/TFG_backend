@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +30,7 @@ open class SecurityConfig(
     @Bean
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+                .cors(Customizer.withDefaults())
                 .csrf { it.disable() } // Apagamos CSRF (obligatorio al usar JWT)
                 .authorizeHttpRequests { auth ->
                     auth
@@ -77,5 +81,18 @@ open class SecurityConfig(
     open fun passwordEncoder(): PasswordEncoder {
         // Encriptación industrial estándar
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    open fun corsConfigurer(): WebMvcConfigurer {
+        return object : WebMvcConfigurer {
+            override fun addCorsMappings(registry: CorsRegistry) {
+                registry.addMapping("/api/**") // Protegemos todas las rutas de la API
+                    .allowedOrigins("http://localhost:3000") // Permite tu Frontend
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true) // 👈 ¡VITAL para que las Cookies funcionen!
+            }
+        }
     }
 }

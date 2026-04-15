@@ -87,7 +87,7 @@ open class ServicioAutenticacionImpl(
 
     private fun createAccessToken(user: UserDetails): String {
         val rol = user.authorities.firstOrNull()?.authority ?: "USER"
-        return generadorToken.generarToken(user.username, rol)
+        return generadorToken.generarToken(user.username, rol, accessTokenExpiration)
     }
 
     private fun createRefreshToken(user: UserDetails): String {

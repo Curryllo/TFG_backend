@@ -32,7 +32,7 @@ interface ServicioETL {
 }
 
 interface GeneradorToken {
-    fun generarToken(email: String, rol: String) : String
+    fun generarToken(email: String, rol: String, tiempo: Long) : String
 }
 
 interface InformacionUsuario {
