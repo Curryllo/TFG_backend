@@ -31,6 +31,7 @@ interface Controlador {
     fun guardarFormularioGarrapatas(datos: FormularioGarrapatasIn, request: HttpServletRequest) : ResponseEntity<Any>
     fun obtenerDatosGarrapatas(request: HttpServletRequest) : ResponseEntity<Any>
     fun completarDatosGeograficos(datos: FormularioMonitoreoIn) : FormularioMonitoreoIn
+    fun completarDatosGeograficos(datos: FormularioHumanosIn) : FormularioHumanosIn
 }
 
 
@@ -96,12 +97,47 @@ class ControladorImpl(
         }
         return datos
     }
+
+    override fun completarDatosGeograficos(datos: FormularioHumanosIn): FormularioHumanosIn {
+        val headers = HttpHeaders()
+        headers.set("User-Agent", "TFG_IngInfor_Monitoreo")
+        val entity = HttpEntity<String>(headers)
+
+        // Comprobamos que el municipio no esté en blanco y falten las coordenadas
+        if (datos.municipioResidencia.isNotBlank() && datos.latitud == null) {
+
+            // Acotamos la búsqueda explícitamente a Aragón, España
+            val busqueda = "${datos.municipioResidencia}, Aragón, España"
+
+            val url = UriComponentsBuilder.fromHttpUrl("$nominatimUrl/search")
+                .queryParam("q", busqueda)
+                .queryParam("format", "json")
+                .queryParam("limit", 1)
+                .build().toUriString()
+
+            val response = restTemplate.exchange(url, HttpMethod.GET, entity, Array<NominatimSearchResponse>::class.java)
+            val body = response.body
+
+            if (!body.isNullOrEmpty()) {
+                return datos.copy(
+                    latitud = body[0].lat.toDouble(),
+                    longitud = body[0].lon.toDouble()
+                )
+            }
+        }
+
+        // Si ya venían las coordenadas rellenas, o si la API de Nominatim no
+        // encontró resultados, devolvemos el objeto original sin modificar.
+        return datos
+    }
+
     @PostMapping(value = ["/api/formHumanos"])
     override fun guardarFormularioHumano(
         @RequestBody datos: FormularioHumanosIn, request: HttpServletRequest): ResponseEntity<Any> {
         println("Ha entrado")
         println("Edad: " + datos.edad)
-        val formularioDominio = datos.toDomain()
+        val datosCompletos = completarDatosGeograficos(datos)
+        val formularioDominio = datosCompletos.toDomain()
         val resultado = logFormularioHumanoUseCase.log(formularioDominio)
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }

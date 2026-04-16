@@ -14,7 +14,9 @@ fun FormularioHumanosIn.toDomain() = FormularioHumano(
     provinciaResidencia = provinciaResidencia,
     municipioResidencia = municipioResidencia,
     defuncion = defuncion,
-    hospitalizado = casoHospitalizado
+    hospitalizado = casoHospitalizado,
+    latitud = latitud,
+    longitud = longitud
 )
 
 fun FormularioMonitoreoIn.toDomain() = FormularioMonitoreo(

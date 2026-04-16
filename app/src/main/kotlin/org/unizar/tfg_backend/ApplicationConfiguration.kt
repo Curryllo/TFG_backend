@@ -49,7 +49,9 @@ class ApplicationConfiguration(
 
     @Bean
     fun logFormularioHumanoUseCase() =
-            LogFormularioHumanoUseCaseImpl(servicioRepositorioFormilarioHumano(), servicioETL)
+            LogFormularioHumanoUseCaseImpl(
+                servicioRepositorioFormilarioHumano(), servicioETL,
+                servicioRepositorioFormularioMonitoreo(), servicioEmail)
 
     @Bean
     fun obtenerFormulariosHumanosUseCase() =

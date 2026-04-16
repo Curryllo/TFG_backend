@@ -13,7 +13,9 @@ data class FormularioHumanosIn (
     val provinciaResidencia: Char = 'U',
     val municipioResidencia: String = "",
     val defuncion: Boolean = false,
-    val casoHospitalizado: Boolean = false
+    val casoHospitalizado: Boolean = false,
+    val latitud: Double? = null,
+    val longitud: Double? = null
 )
 
 data class FormularioMonitoreoIn(

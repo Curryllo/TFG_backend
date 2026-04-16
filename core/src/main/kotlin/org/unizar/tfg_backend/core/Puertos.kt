@@ -14,6 +14,8 @@ interface ServicioRepositorioFormularioMonitoreo {
     fun save(form: FormularioMonitoreo): FormularioMonitoreo
 
     fun findAll(): List<FormularioMonitoreo>
+
+    fun buscarVectoresEnRadio(latitud: Double, longitud: Double, radioKm: Double): List<FormularioMonitoreo>
 }
 
 interface ServicioRepositorioFormularioGarrapatas {
@@ -22,9 +24,10 @@ interface ServicioRepositorioFormularioGarrapatas {
     fun findAll(): List<FormularioGarrapatas>
 }
 
-
 interface ServicioEmail {
     fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String)
+    fun sendAlertaCasoHumanoCercaVectores(enfermedad: String, municipio: String, vectoresCercanos: List<FormularioMonitoreo>
+    )
 }
 
 interface ServicioETL {
@@ -32,24 +35,21 @@ interface ServicioETL {
 }
 
 interface GeneradorToken {
-    fun generarToken(email: String, rol: String, tiempo: Long) : String
+    fun generarToken(email: String, rol: String, tiempo: Long): String
 }
 
 interface InformacionUsuario {
-    fun autenticar(email: String, password: String) : Usuario
+    fun autenticar(email: String, password: String): Usuario
 }
 
-data class TokensDominio(
-    val tokenAcceso: String,
-    val tokenRefresco: String
-)
+data class TokensDominio(val tokenAcceso: String, val tokenRefresco: String)
 
 interface ServicioAutenticacion {
-    fun autenticar(email: String, password: String) : TokensDominio
+    fun autenticar(email: String, password: String): TokensDominio
 
     fun registrar(usuario: Usuario)
 
-    fun refrescarTokens(refreshToken: String) : TokensDominio
+    fun refrescarTokens(refreshToken: String): TokensDominio
 
     fun cerrarSesion(refreshToken: String)
 }

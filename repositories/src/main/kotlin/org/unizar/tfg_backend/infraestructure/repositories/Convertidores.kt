@@ -17,7 +17,9 @@ fun FormularioHumano.toEntity() = EntidadFormularioHumano(
     provinciaResidencia = provinciaResidencia,
     municipioResidencia = municipioResidencia,
     defuncion = defuncion,
-    hospitalizado = hospitalizado
+    hospitalizado = hospitalizado,
+    latitud = latitud,
+    longitud = longitud
 )
 
 fun EntidadFormularioHumano.toDomain() = FormularioHumano(
@@ -29,7 +31,9 @@ fun EntidadFormularioHumano.toDomain() = FormularioHumano(
     provinciaResidencia = provinciaResidencia,
     municipioResidencia = municipioResidencia,
     defuncion = defuncion,
-    hospitalizado = hospitalizado
+    hospitalizado = hospitalizado,
+    latitud = latitud,
+    longitud = longitud
 )
 
 fun FormularioMonitoreo.toEntity() = EntidadFormularioMonitoreo(

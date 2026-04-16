@@ -42,6 +42,12 @@ class ServicioRepositorioFormularioMonitoreoImpl(
 
         return list.map { it.toDomain() }
     }
+
+    override fun buscarVectoresEnRadio(latitud: Double, longitud: Double, radioKm: Double): List<FormularioMonitoreo> {
+        val list = repositorioFormularioMonitoreoJpa.findVectoresEnRadio(latitud, longitud, radioKm)
+
+        return list.map { it.toDomain() }
+    }
 }
 
 class ServicioRepositorioFormularioHumanoImpl(
