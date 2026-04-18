@@ -5,7 +5,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,7 +19,7 @@ import org.unizar.tfg_backend.infraestructure.repositories.RepositorioUsuariosJp
 open class ServicioAutenticacionImpl(
         private val authManager: AuthenticationManager,
         private val encoder: PasswordEncoder,
-        private val userDetailsService: UserDetailsService,
+        private val servicioDetallesUsuario: ServicioDetallesUsuario,
         private val generadorToken: GeneradorTokenImpl,
         private val repositorioRefrescoToken: RepositorioRefrescoToken,
         private val repositorioUsuarios: RepositorioUsuariosJpa,
@@ -32,7 +31,7 @@ open class ServicioAutenticacionImpl(
     override fun autenticar(email: String, contrasena: String): TokensDominio {
         authManager.authenticate(UsernamePasswordAuthenticationToken(email, contrasena))
 
-        val user = userDetailsService.loadUserByUsername(email)
+        val user = servicioDetallesUsuario.loadUserByUsername(email)
 
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
@@ -63,7 +62,7 @@ open class ServicioAutenticacionImpl(
     @Transactional
     override fun refrescarTokens(refreshToken: String): TokensDominio {
         val username = generadorToken.extractEmail(refreshToken)
-        val currentUserDetails = userDetailsService.loadUserByUsername(username)
+        val currentUserDetails = servicioDetallesUsuario.loadUserByUsername(username)
         val refreshTokenUserDetails = repositorioRefrescoToken.findUserDetailsByToken(refreshToken)
 
         if (currentUserDetails.username != refreshTokenUserDetails?.username) {

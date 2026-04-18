@@ -1,5 +1,6 @@
 package org.unizar.tfg_backend.infraestrcuture.security
 
+import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -13,10 +14,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 
 @Component
 class FiltroAutenticacion (
-    private val userDetailsService: UserDetailsService,
+    private val servicioDetallesUsuario: ServicioDetallesUsuario,
     private val generadorToken: GeneradorTokenImpl
 ) : OncePerRequestFilter() {
-    override fun doFilterInternal(
+    public override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
@@ -32,7 +33,7 @@ class FiltroAutenticacion (
                 val username: String = generadorToken.extractEmail(token)
 
                 if (SecurityContextHolder.getContext().authentication == null) {
-                    val userDetails: UserDetails = userDetailsService.loadUserByUsername(username)
+                    val userDetails: UserDetails = servicioDetallesUsuario.loadUserByUsername(username)
 
                     if (username == userDetails.username) {
                         val authToken = UsernamePasswordAuthenticationToken(
@@ -42,6 +43,11 @@ class FiltroAutenticacion (
                         SecurityContextHolder.getContext().authentication = authToken
                     }
                 }
+            } catch (ex: ExpiredJwtException) {
+                response.status = HttpServletResponse.SC_UNAUTHORIZED
+                response.contentType = "application/json"
+                response.writer.write("""{"error": "Token caducado", "code": "TOKEN_EXPIRED"}""")
+                return
             } catch (ex: Exception) {
                 // 🟢 Mejorado: Devolvemos un 401 real y evitamos que explote
                 response.status = HttpServletResponse.SC_UNAUTHORIZED
