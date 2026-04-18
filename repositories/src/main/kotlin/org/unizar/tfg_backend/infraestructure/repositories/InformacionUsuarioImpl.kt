@@ -15,7 +15,8 @@ class InformacionUsuarioImpl (
             usuario?.puesto ?: "",
             usuario?.email ?: "",
             usuario?.rol ?: "",
-            usuario?.password ?: ""
+            usuario?.password ?: "",
+            usuario?.estado ?: ""
         )
     }
 }

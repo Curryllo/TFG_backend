@@ -85,7 +85,8 @@ fun Usuario.toEntity() = EntidadUsuario(
     puesto = puesto,
     email = email,
     rol = rol,
-    password = password
+    password = password,
+    estado = estado
 )
 
 fun EntidadUsuario.toDomain() = Usuario(
@@ -95,5 +96,6 @@ fun EntidadUsuario.toDomain() = Usuario(
     puesto = puesto,
     email = email,
     rol = rol,
-    password = password
+    password = password,
+    estado = estado
 )

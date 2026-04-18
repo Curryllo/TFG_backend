@@ -46,4 +46,5 @@ fun SingIn.toDomain() = Usuario(
     email = email,
     rol = rol,
     password = password,
+    estado = estado
 )

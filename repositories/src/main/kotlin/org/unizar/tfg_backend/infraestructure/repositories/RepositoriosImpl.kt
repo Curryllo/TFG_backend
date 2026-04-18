@@ -8,6 +8,8 @@ import org.unizar.tfg_backend.core.FormularioHumano
 import org.unizar.tfg_backend.core.FormularioMonitoreo
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioHumano
 import org.unizar.tfg_backend.core.ServicioRepositorioFormularioMonitoreo
+import org.unizar.tfg_backend.core.ServicioRepositorioUsuarios
+import org.unizar.tfg_backend.core.Usuario
 
 class ServicioRepositorioFormularioMonitoreoImpl(
     private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa
@@ -115,6 +117,30 @@ class ServicioRepositorioFormularioGarrapatasImpl(
     override fun findAll(): List<FormularioGarrapatas> {
         val list = repositorioFormularioGarrapatasJpa.findAll()
         return list.map { it.toDomain() }
+    }
+}
+
+class ServicioRepositorioUsuariosImpl(
+    private val repositorioUsuariosJpa: RepositorioUsuariosJpa
+) : ServicioRepositorioUsuarios {
+    override fun listadoSolicitudesRegistro(): List<Usuario> {
+        val list = repositorioUsuariosJpa.findByEstado("Pendiente")
+        return list.map { it.toDomain() }
+    }
+
+    override fun rechazarSolicitudRegistro(email: String) {
+        val solicitud = repositorioUsuariosJpa.findByEmail(email)
+            ?: throw NoSuchElementException("No se encontró ninguna solicitud pendiente para el email: $email")
+        repositorioUsuariosJpa.delete(solicitud)
+    }
+
+    override fun aprobarSolictudRegistro(email: String) {
+        val solicitud = repositorioUsuariosJpa.findByEmail(email)
+            ?: throw NoSuchElementException("No se encontró ninguna solicitud pendiente para el email: $email")
+
+        solicitud.estado = "Activo"
+
+        repositorioUsuariosJpa.save(solicitud)
     }
 }
 

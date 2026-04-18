@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface RepositorioUsuariosJpa : JpaRepository<EntidadUsuario,Long> {
     fun findByEmail(email: String): EntidadUsuario?
+    fun findByEstado(estado: String): List<EntidadUsuario>
 }

@@ -53,3 +53,9 @@ interface ServicioAutenticacion {
 
     fun cerrarSesion(refreshToken: String)
 }
+
+interface ServicioRepositorioUsuarios {
+    fun listadoSolicitudesRegistro(): List<Usuario>
+    fun rechazarSolicitudRegistro(email: String)
+    fun aprobarSolictudRegistro(email: String)
+}

@@ -44,5 +44,6 @@ data class Usuario(
         val puesto: String,
         val email: String,
         val rol: String,
-        val password: String
+        val password: String,
+        val estado: String
 )

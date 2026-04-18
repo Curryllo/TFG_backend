@@ -85,7 +85,8 @@ class EntidadUsuario(
         @Column(name = "puesto") val puesto: String,
         @Column(name = "email") val email: String,
         @Column(name = "rol") val rol: String,
-        @Column(name = "password") val password: String
+        @Column(name = "password") val password: String,
+        @Column(name = "estado") var estado: String
 )
 
 @Entity

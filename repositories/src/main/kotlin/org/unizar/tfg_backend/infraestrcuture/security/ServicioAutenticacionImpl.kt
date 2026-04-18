@@ -53,7 +53,8 @@ open class ServicioAutenticacionImpl(
                         puesto = usuario.puesto,
                         email = usuario.email,
                         rol = usuario.rol,
-                        password = contrasenaHash
+                        password = contrasenaHash,
+                        estado = usuario.estado
                 )
 
         repositorioUsuarios.save(entidad)

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration
 import org.unizar.tfg_backend.core.ServicioAutenticacion
 import org.unizar.tfg_backend.core.ServicioETL
 import org.unizar.tfg_backend.core.ServicioEmail
+import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCase
+import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.CerrarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCaseImpl
@@ -15,21 +17,26 @@ import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.ObtenerSolicitudesRegistroUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.RechazarSolicitudesRegistroUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.RefrescarTokenUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.RegistrarUseCaseImpl
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioGarrapatasJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumanoJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreoJpa
+import org.unizar.tfg_backend.infraestructure.repositories.RepositorioUsuariosJpa
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioETLImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioGarrapatasImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioHumanoImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioMonitoreoImpl
+import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioUsuariosImpl
 
 @Configuration
 class ApplicationConfiguration(
         private val repositorioFormularioHumanoJpa: RepositorioFormularioHumanoJpa,
         private val repositorioFormularioMonitoreoJpa: RepositorioFormularioMonitoreoJpa,
         private val repositorioFormularioGarrapatasJpa: RepositorioFormularioGarrapatasJpa,
+        private val repositorioUsuariosJpa: RepositorioUsuariosJpa,
         private val servicioAutenticacion: ServicioAutenticacion,
         private val servicioEmail: ServicioEmail,
         private val servicioETL: ServicioETL,
@@ -46,6 +53,10 @@ class ApplicationConfiguration(
     @Bean
     fun servicioRepositorioFormularioGarrapatas() =
             ServicioRepositorioFormularioGarrapatasImpl(repositorioFormularioGarrapatasJpa)
+
+    @Bean
+    fun servicioRepositorioUsuarios() =
+            ServicioRepositorioUsuariosImpl(repositorioUsuariosJpa)
 
     @Bean
     fun logFormularioHumanoUseCase() =
@@ -86,4 +97,13 @@ class ApplicationConfiguration(
 
     @Bean
     fun cerrarSesionUseCase() = CerrarSesionUseCaseImpl(servicioAutenticacion)
+
+    @Bean
+    fun obtenerSolicitudesRegistroUseCase() = ObtenerSolicitudesRegistroUseCaseImpl(servicioRepositorioUsuarios())
+
+    @Bean
+    fun rechazarSolicitudRegistroUseCase() = RechazarSolicitudesRegistroUseCaseImpl(servicioRepositorioUsuarios())
+
+    @Bean
+    fun aprobarSolicitudRegistroUseCase() = AprobarSolicitudRegistroUseCaseImpl(servicioRepositorioUsuarios())
 }
