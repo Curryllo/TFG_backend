@@ -16,8 +16,11 @@ import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import org.unizar.tfg_backend.core.ServicioMinIO
+import org.unizar.tfg_backend.core.usecases.DescargarArchivoMinIOUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
@@ -32,6 +35,7 @@ interface Controlador {
     fun obtenerDatosGarrapatas(request: HttpServletRequest) : ResponseEntity<Any>
     fun completarDatosGeograficos(datos: FormularioMonitoreoIn) : FormularioMonitoreoIn
     fun completarDatosGeograficos(datos: FormularioHumanosIn) : FormularioHumanosIn
+    fun descargaDatos(archivo: String) : ResponseEntity<Any>
 }
 
 
@@ -55,7 +59,8 @@ class ControladorImpl(
     val logFormularioMonitoreoUseCase: LogFormularioMonitoreoUseCase,
     val obtenerFormulariosMonitoreoUseCase: ObtenerFormulariosMonitoreoUseCase,
     val logFormularioGarrapatasUseCase: LogFormularioGarrapatasUseCase,
-    val obtenerFormulariosGarrapatasUseCase: ObtenerFormulariosGarrapatasUseCase
+    val obtenerFormulariosGarrapatasUseCase: ObtenerFormulariosGarrapatasUseCase,
+    val descargarArchivoMinIOUseCase: DescargarArchivoMinIOUseCase
 ) : Controlador {
     private val restTemplate = RestTemplate()
     private val nominatimUrl = "https://nominatim.openstreetmap.org"
@@ -197,4 +202,15 @@ class ControladorImpl(
             ResponseEntity.ok(lista)
         }
     }
+
+    @GetMapping(value = ["/api/descargaDatos/csv"])
+    override fun descargaDatos(@RequestParam archivo: String) : ResponseEntity<Any> {
+        val url = descargarArchivoMinIOUseCase.descargar("tfg-data-lake", archivo)
+        return if (url.isNotEmpty()) {
+            ResponseEntity.ok(mapOf("url" to url))
+        } else {
+            ResponseEntity.noContent().build()
+        }
+    }
+
 }

@@ -61,3 +61,8 @@ interface ServicioRepositorioUsuarios {
     fun eliminarUsuario(email: String)
     fun listadoUsuariosActivos(): List<Usuario>
 }
+
+
+interface ServicioMinIO {
+    fun generarUrlDescarga(cubo: String, objeto: String) : String
+}

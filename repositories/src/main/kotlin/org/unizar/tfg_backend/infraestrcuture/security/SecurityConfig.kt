@@ -40,7 +40,8 @@ open class SecurityConfig(
                                     "/api/auth/login",
                                     "/api/auth/refresh",
                                     "/api/auth/singIn",
-                                    "/api/auth/logout"
+                                    "/api/auth/logout",
+                                    "/error"
                             )
                             .permitAll()
                             // 🔒 Cualquier otra ruta requiere un JWT válido
