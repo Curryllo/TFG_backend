@@ -139,8 +139,18 @@ class ServicioRepositorioUsuariosImpl(
             ?: throw NoSuchElementException("No se encontró ninguna solicitud pendiente para el email: $email")
 
         solicitud.estado = "Activo"
-
         repositorioUsuariosJpa.save(solicitud)
+    }
+
+    override fun eliminarUsuario(email: String) {
+        val usuario = repositorioUsuariosJpa.findByEmail(email)
+            ?: throw NoSuchElementException("No se encontró ningún usuario con el email: $email")
+        repositorioUsuariosJpa.delete(usuario)
+    }
+
+    override fun listadoUsuariosActivos(): List<Usuario> {
+        val list = repositorioUsuariosJpa.findByEstado("Activo")
+        return list.map { it.toDomain() }
     }
 }
 

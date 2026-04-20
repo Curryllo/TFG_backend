@@ -10,6 +10,7 @@ import org.unizar.tfg_backend.core.ServicioEmail
 import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCase
 import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.CerrarSesionUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.EliminarUsuarioUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCaseImpl
@@ -18,6 +19,7 @@ import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCaseI
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerSolicitudesRegistroUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.ObtenerUsuariosActivosImpl
 import org.unizar.tfg_backend.core.usecases.RechazarSolicitudesRegistroUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.RefrescarTokenUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.RegistrarUseCaseImpl
@@ -106,4 +108,10 @@ class ApplicationConfiguration(
 
     @Bean
     fun aprobarSolicitudRegistroUseCase() = AprobarSolicitudRegistroUseCaseImpl(servicioRepositorioUsuarios())
+
+    @Bean
+    fun eliminarUsuarioUseCase() = EliminarUsuarioUseCaseImpl(servicioRepositorioUsuarios())
+
+    @Bean
+    fun obtenerUsuariosActivosUseCase() = ObtenerUsuariosActivosImpl(servicioRepositorioUsuarios())
 }

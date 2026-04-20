@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCase
-import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.EliminarUsuarioUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerSolicitudesRegistroUseCase
+import org.unizar.tfg_backend.core.usecases.ObtenerUsuariosActivosUseCase
 import org.unizar.tfg_backend.core.usecases.RechazarSolicitudesRegistroUseCase
 
 
@@ -18,7 +19,9 @@ import org.unizar.tfg_backend.core.usecases.RechazarSolicitudesRegistroUseCase
 class AdminController(
     private val obtenerSolicitudesRegistroUseCase: ObtenerSolicitudesRegistroUseCase,
     private val rechazarSolicitudesRegistroUseCase: RechazarSolicitudesRegistroUseCase,
-    private val aprobarSolicitudRegistroUseCase: AprobarSolicitudRegistroUseCase
+    private val aprobarSolicitudRegistroUseCase: AprobarSolicitudRegistroUseCase,
+    private val eliminarUsuarioUseCase: EliminarUsuarioUseCase,
+    private val obtenerUsuariosActivosUseCase: ObtenerUsuariosActivosUseCase
 ) {
 
     @GetMapping("/solicitudes")
@@ -40,6 +43,21 @@ class AdminController(
     @DeleteMapping("/solicitudes/{email}/rechazar")
     fun eliminarSolicitudPendiente(@PathVariable email: String) {
         rechazarSolicitudesRegistroUseCase.rechazarSolicitudesRegistro(email)
+    }
+
+    @DeleteMapping("/eliminar/{email}")
+    fun eliminarUsuario(@PathVariable email: String){
+        eliminarUsuarioUseCase.eliminarUsuario(email)
+    }
+
+    @GetMapping("/usuarios")
+    fun obtenerUsuariosActivos(): ResponseEntity<Any> {
+        val lista = obtenerUsuariosActivosUseCase.obtenerUsuariosActivos()
+        return if (lista.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(lista)
+        }
     }
 
 

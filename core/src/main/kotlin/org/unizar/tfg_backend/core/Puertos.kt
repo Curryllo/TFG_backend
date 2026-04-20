@@ -58,4 +58,6 @@ interface ServicioRepositorioUsuarios {
     fun listadoSolicitudesRegistro(): List<Usuario>
     fun rechazarSolicitudRegistro(email: String)
     fun aprobarSolictudRegistro(email: String)
+    fun eliminarUsuario(email: String)
+    fun listadoUsuariosActivos(): List<Usuario>
 }
