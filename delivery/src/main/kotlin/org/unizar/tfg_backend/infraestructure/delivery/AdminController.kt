@@ -28,36 +28,31 @@ class AdminController(
     fun obtenerSolicitudesPendientes(): ResponseEntity<Any> {
         val lista = obtenerSolicitudesRegistroUseCase.obtenerSolicitudesRegistro()
         println("Lista de solicitudes $lista")
-        return if (lista.isEmpty()) {
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.ok(lista)
-        }
+        return ResponseEntity.ok(lista)
     }
 
     @PostMapping("/solicitudes/{email}/aprobar")
-    fun aprobarSolicitudPendiente(@PathVariable email: String) {
+    fun aprobarSolicitudPendiente(@PathVariable email: String) : ResponseEntity<Any> {
         aprobarSolicitudRegistroUseCase.aprobarSolicitudRegistro(email)
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/solicitudes/{email}/rechazar")
-    fun eliminarSolicitudPendiente(@PathVariable email: String) {
+    fun eliminarSolicitudPendiente(@PathVariable email: String) : ResponseEntity<Any> {
         rechazarSolicitudesRegistroUseCase.rechazarSolicitudesRegistro(email)
+        return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/eliminar/{email}")
-    fun eliminarUsuario(@PathVariable email: String){
+    fun eliminarUsuario(@PathVariable email: String) : ResponseEntity<Any> {
         eliminarUsuarioUseCase.eliminarUsuario(email)
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping("/usuarios")
     fun obtenerUsuariosActivos(): ResponseEntity<Any> {
         val lista = obtenerUsuariosActivosUseCase.obtenerUsuariosActivos()
-        return if (lista.isEmpty()) {
-            ResponseEntity.noContent().build()
-        } else {
-            ResponseEntity.ok(lista)
-        }
+        return ResponseEntity.ok(lista)
     }
 
 

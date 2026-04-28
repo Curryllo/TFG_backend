@@ -66,7 +66,9 @@ fun FormularioGarrapatas.toEntity() = EntidadFormularioGarrapata(
     especie = especie,
     fechaRecogida = fecha,
     enHumano = enHumano,
-    animal = animal
+    animal = animal,
+    longitud = longitud,
+    latitud = latitud
 )
 
 fun EntidadFormularioGarrapata.toDomain() = FormularioGarrapatas(
@@ -74,7 +76,9 @@ fun EntidadFormularioGarrapata.toDomain() = FormularioGarrapatas(
     especie = especie,
     fecha = fechaRecogida,
     enHumano = enHumano,
-    animal = animal
+    animal = animal,
+    longitud = longitud,
+    latitud = latitud
 )
 
 fun Usuario.toEntity() = EntidadUsuario(

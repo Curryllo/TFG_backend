@@ -67,7 +67,9 @@ class EntidadFormularioGarrapata(
         @Column(name = "especie") val especie: String,
         @Column(name = "fecharecogida") val fechaRecogida: LocalDate,
         @Column(name = "enhumano") val enHumano: Boolean,
-        @Column(name = "animal") val animal: String
+        @Column(name = "animal") val animal: String,
+        @Column(name = "longitud") val longitud: Double?,
+        @Column(name = "latitud") val latitud: Double?
 )
 
 @Entity

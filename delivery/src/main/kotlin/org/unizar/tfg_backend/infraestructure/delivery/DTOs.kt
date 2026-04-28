@@ -34,7 +34,9 @@ data class FormularioGarrapatasIn(
     val especie: String = "",
     val fecha: LocalDate = LocalDate.now(),
     val enHumano: Boolean = false,
-    val animal: String = ""
+    val animal: String = "",
+    val longitud: Double? = null,
+    val latitud: Double? = null
 )
 
 data class LoginIn(

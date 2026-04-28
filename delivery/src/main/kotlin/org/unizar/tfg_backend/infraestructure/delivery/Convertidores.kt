@@ -35,7 +35,9 @@ fun FormularioGarrapatasIn.toDomain() = FormularioGarrapatas(
     especie = especie,
     fecha = fecha,
     enHumano = enHumano,
-    animal = animal
+    animal = animal,
+    longitud = longitud,
+    latitud = latitud
 )
 
 fun SingIn.toDomain() = Usuario(

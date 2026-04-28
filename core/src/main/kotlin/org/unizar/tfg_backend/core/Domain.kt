@@ -34,7 +34,9 @@ data class FormularioGarrapatas(
         val especie: String,
         val fecha: LocalDate,
         val enHumano: Boolean,
-        val animal: String
+        val animal: String,
+        val longitud: Double?,
+        val latitud: Double?
 )
 
 data class Usuario(

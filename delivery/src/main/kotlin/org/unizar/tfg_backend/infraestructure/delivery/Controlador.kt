@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
-import org.unizar.tfg_backend.core.ServicioMinIO
 import org.unizar.tfg_backend.core.usecases.DescargarArchivoMinIOUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCase
@@ -35,6 +34,7 @@ interface Controlador {
     fun obtenerDatosGarrapatas(request: HttpServletRequest) : ResponseEntity<Any>
     fun completarDatosGeograficos(datos: FormularioMonitoreoIn) : FormularioMonitoreoIn
     fun completarDatosGeograficos(datos: FormularioHumanosIn) : FormularioHumanosIn
+    fun completarDatosGeograficos(datos: FormularioGarrapatasIn) : FormularioGarrapatasIn
     fun descargaDatos(archivo: String) : ResponseEntity<Any>
 }
 
@@ -105,7 +105,7 @@ class ControladorImpl(
 
     override fun completarDatosGeograficos(datos: FormularioHumanosIn): FormularioHumanosIn {
         val headers = HttpHeaders()
-        headers.set("User-Agent", "TFG_IngInfor_Monitoreo")
+        headers.set("User-Agent", "TFG_IngInfor")
         val entity = HttpEntity<String>(headers)
 
         // Comprobamos que el municipio no esté en blanco y falten las coordenadas
@@ -133,6 +133,33 @@ class ControladorImpl(
 
         // Si ya venían las coordenadas rellenas, o si la API de Nominatim no
         // encontró resultados, devolvemos el objeto original sin modificar.
+        return datos
+    }
+
+    override fun completarDatosGeograficos(datos: FormularioGarrapatasIn): FormularioGarrapatasIn {
+        val headers = HttpHeaders()
+        headers.set("User-Agent", "TFG_IngInfor")
+        val entity = HttpEntity<String>(headers)
+
+        if(datos.municipio.isNotBlank() && datos.latitud == null) {
+            val busqueda = "${datos.municipio}, Aragón, España"
+
+            val url = UriComponentsBuilder.fromHttpUrl("$nominatimUrl/search")
+                .queryParam("q", busqueda)
+                .queryParam("format", "json")
+                .queryParam("limit", 1)
+                .build().toUriString()
+
+            val response = restTemplate.exchange(url, HttpMethod.GET, entity, Array<NominatimSearchResponse>::class.java)
+            val body = response.body
+
+            if (!body.isNullOrEmpty()) {
+                return datos.copy(
+                    latitud = body[0].lat.toDouble(),
+                    longitud = body[0].lon.toDouble()
+                )
+            }
+        }
         return datos
     }
 
@@ -187,7 +214,8 @@ class ControladorImpl(
         request: HttpServletRequest
     ): ResponseEntity<Any> {
         println("Datos recibidos en controlador garrapatas $datos")
-        val formularioDominio = datos.toDomain()
+        val datosCompletos = completarDatosGeograficos(datos);
+        val formularioDominio = datosCompletos.toDomain()
         val resultado = logFormularioGarrapatasUseCase.log(formularioDominio)
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado)
     }
