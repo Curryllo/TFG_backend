@@ -1,5 +1,6 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
+import io.minio.GetObjectArgs
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MinioClient
 import io.minio.http.Method
@@ -24,5 +25,26 @@ class ServicioMinioImpl : ServicioMinIO{
                 .expiry(1, TimeUnit.MINUTES) // El enlace caduca en 5 minutos
                 .build()
         )
+    }
+
+    fun leerCSV(cubo: String, objeto: String) : List<Map<String, String>> {
+        val stream = minioClient.getObject(
+            GetObjectArgs.builder()
+                .bucket(cubo)
+                .`object`(objeto)
+                .build()
+        )
+
+        val lineas = stream.bufferedReader().readLines()
+        if (lineas.isEmpty()) return emptyList()
+
+        val cabeceras = lineas[0].split(";")
+
+        return lineas.drop(1)
+            .filter { it.isNotBlank() }
+            .map { linea ->
+                val valores = linea.split(";")
+                cabeceras.zip(valores).toMap()
+            }
     }
 }

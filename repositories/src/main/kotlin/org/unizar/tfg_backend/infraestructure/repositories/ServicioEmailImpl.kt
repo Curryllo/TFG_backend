@@ -1,7 +1,9 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.unizar.tfg_backend.core.FormularioMonitoreo
@@ -44,6 +46,29 @@ open class ServicioEmailImpl(
                 |Lugar donde se registran los vectores $vectores.
                 |Se recomienda cuarentena durante x días.
             """.trimMargin()
+        mailSender.send(mensaje)
+    }
+    @Async
+    override fun sendInforme(pdf: ByteArray) {
+        val mensaje = mailSender.createMimeMessage()
+        val helper = MimeMessageHelper(mensaje, true, "UTF-8")
+        helper.setFrom("onboarding@resend.dev")
+        helper.setTo("842545@unizar.es")
+        helper.setSubject("Informe Mensual de Casos")
+        helper.setText("""
+        Estimado/a,
+        
+        Adjunto encontrará el informe mensual generado automáticamente.
+        
+        Saludos,
+        Sistema de Vigilancia Epidemiológica
+    """.trimIndent())
+
+        helper.addAttachment(
+            "informe-mensual-${java.time.LocalDate.now()}.pdf",
+            ByteArrayResource(pdf)
+        )
+
         mailSender.send(mensaje)
     }
 }

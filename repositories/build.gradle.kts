@@ -32,6 +32,9 @@ dependencies {
 
     implementation("io.minio:minio:8.5.7")
 
+    implementation("org.jfree:jfreechart:1.5.4")
+    implementation("com.itextpdf:itextpdf:5.5.13.3")
+
 
     implementation("org.springframework.boot:spring-boot-starter-web")
 

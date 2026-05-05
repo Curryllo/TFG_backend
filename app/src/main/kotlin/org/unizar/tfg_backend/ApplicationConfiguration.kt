@@ -8,7 +8,6 @@ import org.unizar.tfg_backend.core.ServicioAutenticacion
 import org.unizar.tfg_backend.core.ServicioETL
 import org.unizar.tfg_backend.core.ServicioEmail
 import org.unizar.tfg_backend.core.ServicioMinIO
-import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCase
 import org.unizar.tfg_backend.core.usecases.AprobarSolicitudRegistroUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.CerrarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.DescargarArchivoMinIOUseCaseImpl
@@ -29,7 +28,6 @@ import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormulario
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioHumanoJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioFormularioMonitoreoJpa
 import org.unizar.tfg_backend.infraestructure.repositories.RepositorioUsuariosJpa
-import org.unizar.tfg_backend.infraestructure.repositories.ServicioETLImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioGarrapatasImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioHumanoImpl
 import org.unizar.tfg_backend.infraestructure.repositories.ServicioRepositorioFormularioMonitoreoImpl

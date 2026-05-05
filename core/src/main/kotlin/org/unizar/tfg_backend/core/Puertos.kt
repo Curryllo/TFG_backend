@@ -26,8 +26,8 @@ interface ServicioRepositorioFormularioGarrapatas {
 
 interface ServicioEmail {
     fun sendAlertaVectorInfectado(enfermedad: String, lugar: String?, vector: String)
-    fun sendAlertaCasoHumanoCercaVectores(enfermedad: String, municipio: String, vectoresCercanos: List<FormularioMonitoreo>
-    )
+    fun sendAlertaCasoHumanoCercaVectores(enfermedad: String, municipio: String, vectoresCercanos: List<FormularioMonitoreo>)
+    fun sendInforme(pdf: ByteArray)
 }
 
 interface ServicioETL {
