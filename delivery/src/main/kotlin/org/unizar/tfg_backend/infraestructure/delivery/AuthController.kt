@@ -33,7 +33,6 @@ class AuthController(
 
     @PostMapping("/singIn")
     fun singIn(@RequestBody request: SingIn) {
-        println("Datos de la solicitud de registro $request")
         val datos = request.toDomain()
         registrarUseCase.registrar(datos)
     }

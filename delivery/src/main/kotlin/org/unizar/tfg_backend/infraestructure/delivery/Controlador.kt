@@ -189,7 +189,6 @@ class ControladorImpl(
     @PostMapping(value = ["/api/formMonitoreo"])
     override fun guardarFormularioMonitoreo(
         @RequestBody datos: FormularioMonitoreoIn, request: HttpServletRequest): ResponseEntity<Any> {
-        //println("Ha entrado")
         val datosCompletos = completarDatosGeograficos(datos)
         val formularioDominio = datosCompletos.toDomain()
         val resultado = logFormularioMonitoreoUseCase.log(formularioDominio)
@@ -213,7 +212,6 @@ class ControladorImpl(
         @RequestBody datos: FormularioGarrapatasIn,
         request: HttpServletRequest
     ): ResponseEntity<Any> {
-        println("Datos recibidos en controlador garrapatas $datos")
         val datosCompletos = completarDatosGeograficos(datos);
         val formularioDominio = datosCompletos.toDomain()
         val resultado = logFormularioGarrapatasUseCase.log(formularioDominio)
@@ -234,6 +232,7 @@ class ControladorImpl(
     @GetMapping(value = ["/api/descargaDatos/csv"])
     override fun descargaDatos(@RequestParam archivo: String) : ResponseEntity<Any> {
         val url = descargarArchivoMinIOUseCase.descargar("tfg-data-lake", archivo)
+
         return if (url.isNotEmpty()) {
             ResponseEntity.ok(mapOf("url" to url))
         } else {

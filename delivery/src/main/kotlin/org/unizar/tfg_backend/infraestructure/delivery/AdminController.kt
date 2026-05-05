@@ -27,7 +27,6 @@ class AdminController(
     @GetMapping("/solicitudes")
     fun obtenerSolicitudesPendientes(): ResponseEntity<Any> {
         val lista = obtenerSolicitudesRegistroUseCase.obtenerSolicitudesRegistro()
-        println("Lista de solicitudes $lista")
         return ResponseEntity.ok(lista)
     }
 
