@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation(kotlin("test"))
