@@ -44,7 +44,8 @@ open class ServicioEmailImpl(
             """ALERTA de Salud Pública
                 |Se ha registrado un caso humano contagiado de $enfermedad en $municipio.
                 |Lugar donde se registran los vectores $vectores.
-                |Se recomienda cuarentena durante x días.
+                |Se deben iniciar inmediatamente las actuaciones recogidas en el Plan de Prevención, 
+                |Vigilancia y Control de las Enfermedades Transmitidas por Vectores en la Comunidad de Aragon.
             """.trimMargin()
         mailSender.send(mensaje)
     }

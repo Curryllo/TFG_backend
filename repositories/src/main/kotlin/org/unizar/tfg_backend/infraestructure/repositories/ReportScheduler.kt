@@ -12,6 +12,7 @@ class ReportScheduler (
 ){
 
     @Scheduled(cron = "0 0 0 1 * *")
+    //@Scheduled(cron = "*/10 * * * * *" )
     fun generarYEnviarInforme() {
         val pdf = servicioPdf.generarInforme()
         servicioEmail.sendInforme(pdf)
