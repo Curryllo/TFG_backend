@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-package org.unizar.tfg_backend.security
+package org.unizar.tfg_backend.infraestructure.security
 
 import io.jsonwebtoken.ExpiredJwtException
 import org.junit.jupiter.api.Assertions.assertEquals

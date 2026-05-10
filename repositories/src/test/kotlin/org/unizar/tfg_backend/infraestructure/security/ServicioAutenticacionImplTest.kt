@@ -1,4 +1,4 @@
-package org.unizar.tfg_backend.security
+package org.unizar.tfg_backend.infraestructure.security
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

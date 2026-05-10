@@ -43,9 +43,9 @@ dependencies {
     // Utilidades de testing para Spring Security y MockMvc
     testImplementation("org.springframework.security:spring-security-test")
 
-    // Opcional pero recomendado para MockHttpServletRequest/Response si no vienen de starter-web
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
