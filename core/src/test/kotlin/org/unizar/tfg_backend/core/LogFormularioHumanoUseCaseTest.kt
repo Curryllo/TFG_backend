@@ -10,7 +10,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import kotlin.test.assertEquals
 
-class LogFormularioHumanoCase {
+class LogFormularioHumanoUseCaseTest {
     private val repositorioFormularioHumano = mock<ServicioRepositorioFormularioHumano>()
     private val servicioETL = mock<ServicioETL>()
     private val repositorioFormularioMonitoreo = mock<ServicioRepositorioFormularioMonitoreo>()
@@ -74,17 +74,23 @@ class LogFormularioHumanoCase {
             enfermedad = "Dengue",
             pais = "España",
             provinciaResidencia = 'Z',
-            municipioResidencia = "Zaragoza",
+            municipioResidencia = "",
             defuncion = false,
             hospitalizado = true,
-            latitud = 41.65,
-            longitud = -0.87
+            latitud = 41.59,
+            longitud = -0.93
         )
-    }
-
-    @Test
-    fun `log no envia mail cuando no hay vectores cercanos`(){
-
+        val vectorFalso = mock<FormularioMonitoreo>()
+        val listaVectoresCercanos = listOf(vectorFalso)
+        `when`(repositorioFormularioHumano.save(formulario)).thenReturn(formulario)
+        `when`(repositorioFormularioMonitoreo.buscarVectoresEnRadio(
+            formulario.latitud!!,
+            formulario.longitud!!,
+            10.0
+        )).thenReturn(listaVectoresCercanos)
+        casodeUso.log(formulario)
+        verify(servicioEmail, times(1))
+            .sendAlertaCasoHumanoCercaVectores(formulario.enfermedad, formulario.municipioResidencia, listaVectoresCercanos)
     }
 
 }
