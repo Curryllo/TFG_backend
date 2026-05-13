@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package org.unizar.tfg_backend.core
 
 import org.junit.jupiter.api.Test
