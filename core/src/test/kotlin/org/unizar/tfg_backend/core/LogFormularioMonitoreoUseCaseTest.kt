@@ -4,7 +4,9 @@ package org.unizar.tfg_backend.core
 
 
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.never
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -75,5 +77,23 @@ class LogFormularioMonitoreoUseCaseTest {
         casoDeUso.log(formulario)
         verify(servicioEmail, times(1))
             .sendAlertaVectorInfectado(formulario.enfermedad!!, formulario.lugarRecogida, formulario.vector)
+    }
+
+    @Test
+    fun `log NO envia mail cuando no hay enfermedad registrada`(){
+        val formulario = FormularioMonitoreo(
+            lugarRecogida = "Parque",
+            vector = "Mosquito",
+            enfermedad = null, // Condición falsa
+            fecha = LocalDate.now(),
+            numero = 1,
+            genero = 'H',
+            latitud = null,
+            longitud = null
+        )
+
+        casoDeUso.log(formulario)
+
+        verify(servicioEmail, never()).sendAlertaVectorInfectado(any(), any(), any())
     }
 }

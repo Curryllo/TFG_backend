@@ -49,3 +49,8 @@ data class Usuario(
         val password: String,
         val estado: String
 )
+
+data class TokensDominio(
+    val tokenAcceso: String,
+    val tokenRefresco: String
+)

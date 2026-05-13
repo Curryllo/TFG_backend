@@ -42,7 +42,6 @@ interface InformacionUsuario {
     fun autenticar(email: String, password: String): Usuario
 }
 
-data class TokensDominio(val tokenAcceso: String, val tokenRefresco: String)
 
 interface ServicioAutenticacion {
     fun autenticar(email: String, password: String): TokensDominio
