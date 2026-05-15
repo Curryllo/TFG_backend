@@ -21,6 +21,8 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import org.unizar.tfg_backend.core.usecases.DescargarArchivoMinIOUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCase
+import org.unizar.tfg_backend.core.usecases.LogLoteGarrapatasUseCase
+import org.unizar.tfg_backend.core.usecases.LogLoteHumanosUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCase
@@ -36,6 +38,8 @@ interface Controlador {
     fun completarDatosGeograficos(datos: FormularioHumanosIn) : FormularioHumanosIn
     fun completarDatosGeograficos(datos: FormularioGarrapatasIn) : FormularioGarrapatasIn
     fun descargaDatos(archivo: String) : ResponseEntity<Any>
+    fun guardarLoteHumanos(datos: List<FormularioHumanosIn>, request: HttpServletRequest) : ResponseEntity<Any>
+    fun guardarLoteGarrapatas(datos: List<FormularioGarrapatasIn>, request: HttpServletRequest) : ResponseEntity<Any>
 }
 
 
@@ -60,7 +64,9 @@ class ControladorImpl(
     val obtenerFormulariosMonitoreoUseCase: ObtenerFormulariosMonitoreoUseCase,
     val logFormularioGarrapatasUseCase: LogFormularioGarrapatasUseCase,
     val obtenerFormulariosGarrapatasUseCase: ObtenerFormulariosGarrapatasUseCase,
-    val descargarArchivoMinIOUseCase: DescargarArchivoMinIOUseCase
+    val descargarArchivoMinIOUseCase: DescargarArchivoMinIOUseCase,
+    val logLoteHumanosUseCase: LogLoteHumanosUseCase,
+    private val logLoteGarrapatasUseCase: LogLoteGarrapatasUseCase
 ) : Controlador {
     private val restTemplate = RestTemplate()
     private val nominatimUrl = "https://nominatim.openstreetmap.org"
@@ -237,6 +243,92 @@ class ControladorImpl(
             ResponseEntity.ok(mapOf("url" to url))
         } else {
             ResponseEntity.noContent().build()
+        }
+    }
+
+    @PostMapping(value = ["/api/loteHumanos"])
+    override fun guardarLoteHumanos(
+        @RequestBody datos: List<FormularioHumanosIn>,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        val cacheMunicipios = mutableMapOf<String, FormularioHumanosIn>()
+
+        val dominios = datos.map { dato ->
+            val municipio = dato.municipioResidencia ?: ""
+
+            val datoCompletado = if (municipio.isNotBlank() && dato.latitud == null) {
+
+                if (cacheMunicipios.containsKey(municipio)) {
+                    val coordCacheadas = cacheMunicipios[municipio]!!
+                    dato.copy(
+                        latitud = coordCacheadas.latitud,
+                        longitud = coordCacheadas.longitud
+                    )
+                } else {
+                    Thread.sleep(1100)
+
+                    val completadoDesdeApi = completarDatosGeograficos(dato)
+
+                    cacheMunicipios[municipio] = completadoDesdeApi
+                    completadoDesdeApi
+                }
+
+            } else {
+                dato
+            }
+
+            datoCompletado.toDomain()
+        }
+
+        val resultado = logLoteHumanosUseCase.log(dominios)
+        return if (resultado.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(resultado)
+        }
+    }
+
+    @PostMapping(value = ["/api/loteGarrapatas"])
+    override fun guardarLoteGarrapatas(
+        @RequestBody datos: List<FormularioGarrapatasIn>,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        println("Datos recibidos: ")
+        println(datos)
+        val cacheMunicipios = mutableMapOf<String, FormularioGarrapatasIn>()
+
+        val dominios = datos.map { dato ->
+            val municipio = dato.municipio ?: ""
+
+            val datoCompletado = if (municipio.isNotBlank() && dato.latitud == null) {
+
+                if (cacheMunicipios.containsKey(municipio)) {
+                    val coordCacheadas = cacheMunicipios[municipio]!!
+                    dato.copy(
+                        latitud = coordCacheadas.latitud,
+                        longitud = coordCacheadas.longitud
+                    )
+                } else {
+                    Thread.sleep(1100)
+
+                    val completadoDesdeApi = completarDatosGeograficos(dato)
+
+                    cacheMunicipios[municipio] = completadoDesdeApi
+                    completadoDesdeApi
+                }
+
+            } else {
+                dato
+            }
+
+            datoCompletado.toDomain()
+        }
+
+        val resultado = logLoteGarrapatasUseCase.log(dominios)
+        return if (resultado.isEmpty()) {
+            ResponseEntity.noContent().build()
+        } else {
+            ResponseEntity.ok(resultado)
         }
     }
 

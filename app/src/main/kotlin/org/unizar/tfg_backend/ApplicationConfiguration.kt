@@ -16,6 +16,8 @@ import org.unizar.tfg_backend.core.usecases.InicarSesionUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.LogLoteGarrapatasUseCaseImpl
+import org.unizar.tfg_backend.core.usecases.LogLoteHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCaseImpl
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCaseImpl
@@ -77,6 +79,20 @@ class ApplicationConfiguration(
                 servicioRepositorioFormularioMonitoreo(),
                 servicioEmail,
                 servicioETL)
+
+    @Bean
+    fun logLoteHumanosUseCase() =
+        LogLoteHumanosUseCaseImpl(
+            servicioRepositorioFormilarioHumano(),
+            servicioETL
+        )
+
+    @Bean
+    fun logLoteGarrapatasUseCase() =
+        LogLoteGarrapatasUseCaseImpl(
+            servicioRepositorioFormularioGarrapatas(),
+            servicioETL
+        )
 
     @Bean
     fun logFormularioGarrapatasUseCase() =
