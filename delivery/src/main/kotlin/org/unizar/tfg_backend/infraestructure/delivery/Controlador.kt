@@ -293,8 +293,6 @@ class ControladorImpl(
         @RequestBody datos: List<FormularioGarrapatasIn>,
         request: HttpServletRequest
     ): ResponseEntity<Any> {
-        println("Datos recibidos: ")
-        println(datos)
         val cacheMunicipios = mutableMapOf<String, FormularioGarrapatasIn>()
 
         val dominios = datos.map { dato ->

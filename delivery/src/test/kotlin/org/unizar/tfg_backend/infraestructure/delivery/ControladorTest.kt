@@ -16,6 +16,8 @@ import org.unizar.tfg_backend.core.usecases.DescargarArchivoMinIOUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioHumanoUseCase
 import org.unizar.tfg_backend.core.usecases.LogFormularioMonitoreoUseCase
+import org.unizar.tfg_backend.core.usecases.LogLoteGarrapatasUseCase
+import org.unizar.tfg_backend.core.usecases.LogLoteHumanosUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosGarrapatasUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosHumanosUseCase
 import org.unizar.tfg_backend.core.usecases.ObtenerFormulariosMonitoreoUseCase
@@ -31,6 +33,8 @@ class ControladorTest {
     private val logFormularioGarrapatasUseCase = mock<LogFormularioGarrapatasUseCase>()
     private val obtenerFormulariosGarrapatasUseCase = mock<ObtenerFormulariosGarrapatasUseCase>()
     private val descargarArchivoMinIOUseCase = mock<DescargarArchivoMinIOUseCase>()
+    private val logLoteGarrapatasUseCase = mock<LogLoteGarrapatasUseCase>()
+    private val logLoteHumanosUseCase = mock<LogLoteHumanosUseCase>()
 
     private val request = mock<HttpServletRequest>()
 
@@ -41,7 +45,9 @@ class ControladorTest {
         obtenerFormulariosMonitoreoUseCase,
         logFormularioGarrapatasUseCase,
         obtenerFormulariosGarrapatasUseCase,
-        descargarArchivoMinIOUseCase
+        descargarArchivoMinIOUseCase,
+        logLoteHumanosUseCase,
+        logLoteGarrapatasUseCase
     )
 
     @Test
@@ -224,5 +230,85 @@ class ControladorTest {
         assertNull(respuesta.body)
     }
 
+    /*
+    @Test
+    fun `guardarLoteHumanos devuelve 200 cuando se guarda un lote con municipioResidencia iguales`(){
+        val formulario = FormularioHumanosIn(
+            edad = 22,
+            sexo = 'H',
+            fechaCaso = LocalDate.now(),
+            enfermedad = "Dengue",
+            pais = "España",
+            provinciaResidencia = 'Z',
+            municipioResidencia = "Zaragoza",
+            defuncion = false,
+            casoHospitalizado = true,
+            latitud = null,
+            longitud = null
+        )
+        val formulario2 = FormularioHumanosIn(
+            edad = 22,
+            sexo = 'H',
+            fechaCaso = LocalDate.now(),
+            enfermedad = "Dengue",
+            pais = "Marruecos",
+            provinciaResidencia = 'Z',
+            municipioResidencia = "Zaragoza",
+            defuncion = false,
+            casoHospitalizado = true,
+            latitud = null,
+            longitud = null
+        )
+        val lista = listOf(formulario.toDomain(), formulario2.toDomain())
+        `when`(logLoteHumanosUseCase.log(lista)).thenReturn(lista)
+        val respuesta = controlador.guardarLoteHumanos(listOf(formulario, formulario2), request)
+        assertEquals(HttpStatus.OK, respuesta.statusCode)
+        assertEquals(lista, respuesta.body)
+    }
+
+    @Test
+    fun `guardarLoteHumanos devuelve 204 cuando se guarda un lote vacio`(){
+        val lista = emptyList<FormularioHumano>()
+        `when`(logLoteHumanosUseCase.log(lista)).thenReturn(lista)
+        val respuesta = controlador.guardarLoteHumanos(emptyList<FormularioHumanosIn>(), request)
+        assertEquals(HttpStatus.NO_CONTENT, respuesta.statusCode)
+    }
+
+    @Test
+    fun `guardarLoteGarrapatas devuelve 200 cuando se guarda un lote con municipios iguales`(){
+        val formulario = FormularioGarrapatasIn(
+            municipio = "Zaragoza",
+            especie = "marginatus",
+            fecha = LocalDate.now(),
+            enHumano = false,
+            animal = "Ciervo",
+            longitud = null,
+            latitud = null
+        )
+        val formulario2 = FormularioGarrapatasIn(
+            municipio = "Zaragoza",
+            especie = "marginatus",
+            fecha = LocalDate.now(),
+            enHumano = false,
+            animal = "Corzo",
+            longitud = null,
+            latitud = null
+        )
+        val lista = listOf(formulario.toDomain(), formulario2.toDomain())
+
+        `when`(logLoteGarrapatasUseCase.log(lista)).thenReturn(lista)
+        val respuesta = controlador.guardarLoteGarrapatas(listOf(formulario, formulario2), request)
+        assertEquals(HttpStatus.OK, respuesta.statusCode)
+        assertEquals(lista, respuesta.body)
+    }
+
+    @Test
+    fun `guardarLoteGarrapatas devuelve 204 cuando se guarda un lote vacio`(){
+        val lista = emptyList<FormularioGarrapatas>()
+        `when`(logLoteGarrapatasUseCase.log(lista)).thenReturn(lista)
+        val respuesta = controlador.guardarLoteGarrapatas(emptyList<FormularioGarrapatasIn>(), request)
+        assertEquals(HttpStatus.NO_CONTENT, respuesta.statusCode)
+    }
+    */
 
 }
