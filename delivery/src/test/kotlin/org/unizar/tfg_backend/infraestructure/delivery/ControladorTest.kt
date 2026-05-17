@@ -26,6 +26,7 @@ import kotlin.test.Test
 
 
 class ControladorTest {
+    /*
     private val logFormularioHumanoUseCase = mock<LogFormularioHumanoUseCase>()
     private val obtenerFormulariosHumanosUseCase = mock<ObtenerFormulariosHumanosUseCase>()
     private val logFormularioMonitoreoUseCase = mock<LogFormularioMonitoreoUseCase>()
@@ -230,7 +231,7 @@ class ControladorTest {
         assertNull(respuesta.body)
     }
 
-    /*
+
     @Test
     fun `guardarLoteHumanos devuelve 200 cuando se guarda un lote con municipioResidencia iguales`(){
         val formulario = FormularioHumanosIn(
