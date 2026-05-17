@@ -4,6 +4,9 @@ logging:
       springframework:
         security: DEBUG
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
   mail:
     host: smtp.resend.com
     port: 465

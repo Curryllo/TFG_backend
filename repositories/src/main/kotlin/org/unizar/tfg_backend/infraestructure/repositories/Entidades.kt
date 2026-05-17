@@ -3,9 +3,11 @@
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import jakarta.persistence.*
+import org.hibernate.envers.Audited
 import java.time.LocalDate
 
 @Entity
+@Audited
 @Table(name = "form_hum")
 @Suppress("LongParameterList")
 class EntidadFormularioHumano(
@@ -29,9 +31,10 @@ class EntidadFormularioHumano(
         @Column(name = "casohospitalizado") val hospitalizado: Boolean,
         @Column(name = "latitud") val latitud: Double?,
         @Column(name = "longitud") val longitud: Double?
-)
+) : EntidadAuditable()
 
 @Entity
+@Audited
 @Table(name = "form_mon")
 @Suppress("LongParameterList")
 class EntidadFormularioMonitoreo(
@@ -48,9 +51,10 @@ class EntidadFormularioMonitoreo(
         @Column(name = "genero") val genero: Char?,
         @Column(name = "longitud") val longitud: Double?,
         @Column(name = "latitud") val latitud: Double?
-)
+) : EntidadAuditable()
 
 @Entity
+@Audited
 @Table(name = "form_garr")
 @Suppress("LongParameterList")
 class EntidadFormularioGarrapata(
@@ -70,9 +74,10 @@ class EntidadFormularioGarrapata(
         @Column(name = "animal") val animal: String,
         @Column(name = "longitud") val longitud: Double?,
         @Column(name = "latitud") val latitud: Double?
-)
+) : EntidadAuditable()
 
 @Entity
+@Audited
 @Table(name = "usuarios")
 @Suppress("LongParameterList")
 class EntidadUsuario(
@@ -89,7 +94,7 @@ class EntidadUsuario(
         @Column(name = "rol") val rol: String,
         @Column(name = "password") val password: String,
         @Column(name = "estado") var estado: String
-)
+) : EntidadAuditable()
 
 @Entity
 @Table(name = "refresh_tokens")
