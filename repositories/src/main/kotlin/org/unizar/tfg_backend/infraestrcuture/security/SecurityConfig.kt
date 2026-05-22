@@ -88,11 +88,12 @@ open class SecurityConfig(
     open fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/api/**") // Protegemos todas las rutas de la API
-                    .allowedOrigins("http://localhost:3000") // Permite tu Frontend
+                registry.addMapping("/api/**")
+                    .allowedOrigins("http://localhost:3000",
+                        "https://main.d31zuuuti2wmus.amplifyapp.com/")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
-                    .allowCredentials(true) // 👈 ¡VITAL para que las Cookies funcionen!
+                    .allowCredentials(true)
             }
         }
     }
