@@ -1,24 +1,21 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.jpa")
-    id("io.spring.dependency-management")
     jacoco
 }
 
 group = "org.unizar"
 version = "0.0.1-SNAPSHOT"
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:3.5.11")
-    }
-}
+
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.11"))
+    implementation(platform("software.amazon.awssdk:bom:2.44.10"))
     implementation(project(":core"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-mail")
@@ -32,13 +29,18 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
-    implementation("io.minio:minio:8.5.7")
+    //implementation("io.minio:minio:8.5.7")
 
     implementation("org.jfree:jfreechart:1.5.4")
     implementation("com.itextpdf:itextpdf:5.5.13.3")
 
 
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+
+    implementation("software.amazon.awssdk:s3")
+    //implementation("software.amazon.awssdk:s3-presigner")
+    implementation("software.amazon.awssdk:lambda")
 
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 
@@ -75,4 +77,12 @@ tasks.named<JacocoReport>("jacocoTestReport") {
 
 kotlin {
     jvmToolchain(21)
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "software.amazon.awssdk") {
+            useVersion("2.39.5")
+        }
+    }
 }

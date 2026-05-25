@@ -1,4 +1,5 @@
-package org.unizar.tfg_backend.infraestrcuture.security // Tu paquete de seguridad
+@file:Suppress("SpellCheckingInspection")
+package org.unizar.tfg_backend.infraestrcuture.security
 
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails

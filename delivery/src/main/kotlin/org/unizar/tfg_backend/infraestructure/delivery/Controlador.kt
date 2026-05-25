@@ -237,7 +237,7 @@ class ControladorImpl(
 
     @GetMapping(value = ["/api/descargaDatos/csv"])
     override fun descargaDatos(@RequestParam archivo: String) : ResponseEntity<Any> {
-        val url = descargarArchivoMinIOUseCase.descargar("tfg-data-lake", archivo)
+        val url = descargarArchivoMinIOUseCase.descargar("tfg-curro-s3", archivo)
 
         return if (url.isNotEmpty()) {
             ResponseEntity.ok(mapOf("url" to url))

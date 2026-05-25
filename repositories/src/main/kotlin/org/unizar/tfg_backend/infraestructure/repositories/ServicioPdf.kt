@@ -1,3 +1,4 @@
+@file:Suppress("SpellCheckingInspection")
 package org.unizar.tfg_backend.infraestructure.repositories
 
 import com.itextpdf.text.Chunk
@@ -33,12 +34,12 @@ import java.time.format.DateTimeFormatter
 
 @Service
 class ServicioPdf(
-    private val servicioMinIO: ServicioMinioImpl
+    private val servicioMinIO: ServicioS3Impl
 ) {
     fun generarInforme(): ByteArray {
-        val datosHumanos = servicioMinIO.leerCSV("tfg-data-lake", "datosLimpiosHumanos.csv")
-        val datosMonitoreo = servicioMinIO.leerCSV("tfg-data-lake", "datosLimpios.csv")
-        val datosGarrapatas = servicioMinIO.leerCSV("tfg-data-lake", "datosLimpiosGarrapatas.csv")
+        val datosHumanos = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpiosHumanos.csv")
+        val datosMonitoreo = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpios.csv")
+        val datosGarrapatas = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpiosGarrapatas.csv")
 
 
         val outputStream = ByteArrayOutputStream()
