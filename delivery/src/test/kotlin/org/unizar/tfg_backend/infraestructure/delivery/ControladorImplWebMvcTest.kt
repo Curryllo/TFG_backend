@@ -146,17 +146,17 @@ class ControladorImplWebMvcTest {
 
     @Test
     fun `GET descargaDatos devuelve 200 con URL cuando el archivo existe`() {
-        `when`(descargarArchivoMinIOUseCase.descargar("tfg-data-lake", "datos.csv"))
-            .thenReturn("http://minio/datos.csv")
+        `when`(descargarArchivoMinIOUseCase.descargar("tfg-curro-s3", "datos.csv"))
+            .thenReturn("http://s3/datos.csv")
 
         mockMvc.perform(get("/api/descargaDatos/csv").param("archivo", "datos.csv"))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.url").value("http://minio/datos.csv"))
+            .andExpect(jsonPath("$.url").value("http://s3/datos.csv"))
     }
 
     @Test
     fun `GET descargaDatos devuelve 204 cuando el archivo no existe`() {
-        `when`(descargarArchivoMinIOUseCase.descargar("tfg-data-lake", "noexiste.csv"))
+        `when`(descargarArchivoMinIOUseCase.descargar("tfg-curro-s3", "noexiste.csv"))
             .thenReturn("")
 
         mockMvc.perform(get("/api/descargaDatos/csv").param("archivo", "noexiste.csv"))

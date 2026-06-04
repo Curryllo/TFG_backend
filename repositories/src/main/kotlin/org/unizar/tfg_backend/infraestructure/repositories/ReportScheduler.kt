@@ -11,6 +11,7 @@ class ReportScheduler (
     private val servicioEmail: ServicioEmail
 ){
 
+    //@Scheduled(cron = "0 * * * * ?")
     @Scheduled(cron = "0 0 0 1 * *")
     //@Scheduled(cron = "*/10 * * * * *" )
     fun generarYEnviarInforme() {

@@ -37,9 +37,9 @@ class ServicioPdf(
     private val servicioMinIO: ServicioS3Impl
 ) {
     fun generarInforme(): ByteArray {
-        val datosHumanos = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpiosHumanos.csv")
-        val datosMonitoreo = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpios.csv")
-        val datosGarrapatas = servicioMinIO.leerCSV("tfg-curro-proceso-etl", "datosLimpiosGarrapatas.csv")
+        val datosHumanos = servicioMinIO.leerCSV("tfg-curro-s3", "datosLimpiosHumanos.csv")
+        val datosMonitoreo = servicioMinIO.leerCSV("tfg-curro-s3", "datosLimpios.csv")
+        val datosGarrapatas = servicioMinIO.leerCSV("tfg-curro-s3", "datosLimpiosGarrapatas.csv")
 
 
         val outputStream = ByteArrayOutputStream()
@@ -128,7 +128,7 @@ class ServicioPdf(
             "Número de casos",
             dataset,
             PlotOrientation.VERTICAL,
-            false,
+            true,
             true,
             false
         )
@@ -243,13 +243,32 @@ class ServicioPdf(
             false
         )
 
+        val coloresModernos = listOf(
+            Color(59, 130, 246),  // Azul brillante (el mismo de tu otro gráfico)
+            Color(16, 185, 129),  // Verde esmeralda
+            Color(245, 158, 11),  // Naranja ámbar
+            Color(239, 68, 68),   // Rojo coral
+            Color(139, 92, 246),  // Morado
+            Color(14, 165, 233)   // Azul cielo
+        )
+
+
+
         chart.title.font = Font("SansSerif", Font.BOLD, 12)
 
         val plot = chart.plot as CategoryPlot
         estiloFondo(plot)
 
         val renderer = plot.renderer as StackedBarRenderer
+        renderer.barPainter = StandardBarPainter() // Elimina el degradado 3D feo
+        renderer.setShadowVisible(false)           // Elimina las sombras
         renderer.isDrawBarOutline = false
+
+        for (i in enfermedadesUnicas.indices) {
+            renderer.setSeriesPaint(i, coloresModernos[i % coloresModernos.size])
+        }
+
+        estilizarBarras(chart)
 
         return chartToImage(chart)
     }
